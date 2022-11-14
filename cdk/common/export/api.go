@@ -1,0 +1,9 @@
+package export
+
+const (
+	GraphQLApiId   = "gqlapiid"
+	GraphQLApiArn  = "gqlapiarn"
+	GraphQLApiRole = "gqlapirole"
+	GraphQLApiUrl  = "gqlapiurl"
+	GraphQLApiKey  = "gqlapikey"
+)

@@ -1,0 +1,6 @@
+github.com/aws/aws-cdk-go/awscdk v1.179.0-devpreview h1:w+Jhrb2b+DEmouq9pIvYPtIzNDQ3Tr+I6XN7c/1VWBo=
+github.com/aws/aws-cdk-go/awscdk v1.179.0-devpreview/go.mod h1:d21XZeUoQf9PDCiKRYT4ZDPcyMjBKqIFNEyLtJgavx4=
+github.com/aws/constructs-go/constructs/v3 v3.4.135/go.mod h1:QPxJbR3iPa7rg2Vv8UHZUpa3CMMNC+lPeXdtw9hosiM=
+golang.org/x/crypto v0.1.0/go.mod h1:RecgLatLF4+eUMCP1PoPZQb+cVrJcOPbHkTkbkB9sbw=
+golang.org/x/net v0.1.0/go.mod h1:Cx3nUiGt4eDBEyega/BKRp+/AlGL8hYe7U9odMt2Cco=
+golang.org/x/term v0.1.0/go.mod h1:jbD1KX2456YbFQfuXm/mYQcufACuNUgVhRMnK/tPxf8=

@@ -1,0 +1,34 @@
+version: 2022-10-23
+project:
+  kind: domain
+  name: param
+  properties:
+    app:
+      name: inmu
+    api:
+      functions:
+        - name: setlastparamfile
+          datasource: mock
+      resolvers:
+        - name: allindustries
+          operation: Query/allIndustries
+          functions: [ssfindallfn]
+        - name: allindustriesfiles
+          operation: Query/allIndustriesFiles
+          functions: [ssfindallfn]
+        - name: downloadlastindustriesfile
+          operation: Query/downloadLastIndustriesFile
+          functions: [ssfindallfn,setlastparamfile,osdownloadfn]
+        - name: downloadparamfile
+          operation: Query/downloadParamFile
+          functions: [osdownloadfn]
+        - name: newindustriesfilespace
+          operation: Mutation/newIndustriesFileSpace
+          functions: [osuploadfn]
+        - name: maintainindustriesfile
+          operation: Mutation/maintainIndustriesFile
+          functions: [sscreatefn]
+    handlers:
+      - name: updateindustries
+        type: advanced
+        events: [IndustriesFileCreated]

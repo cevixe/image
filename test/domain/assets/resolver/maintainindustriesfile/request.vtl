@@ -1,0 +1,7 @@
+#set($input = {
+    "__typename": "IndustriesFile", 
+    "name": $ctx.args.name,
+    "date": $ctx.args.date
+})
+$util.qr($ctx.stash.put("input", $input))
+{}

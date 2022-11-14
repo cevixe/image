@@ -1,0 +1,7 @@
+version: 2022-10-23
+project:
+  kind: app
+  name: inmu
+  properties:
+    domains:
+      - name: param

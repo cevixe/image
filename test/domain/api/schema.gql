@@ -1,0 +1,116 @@
+"""
+An extended ISO 8601 date and time string in the format YYYY-MM-DDThh:mm:ss.sssZ.
+"""
+scalar AWSDateTime
+
+schema
+  @link(
+    url: "https://specs.apollo.dev/federation/v2.0"
+    import: [
+      "@key"
+      "@shareable"
+      "@provides"
+      "@external"
+      "@tag"
+      "@extends"
+      "@override"
+      "@inaccessible"
+    ]
+  ) {
+  query: Query
+  mutation: Mutation
+}
+
+type _Service {
+  sdl: String!
+}
+
+input _Any {
+  __typename: String!
+  id: ID!
+}
+
+type Query @extends {
+  _service: _Service!
+  _entities(representations: [_Any!]!): [_Entity]!
+
+  """
+  Obtiene el enlace de descarga del último archivo de industrias/sectores.
+  """
+  downloadLastIndustriesFile: String
+
+  """
+  Obtiene el enlace de descarga del un archivo de configuración por nombre(fileName).
+  """
+  downloadParamFile(name: String!): String
+
+  """
+  Permite obtener todas las industrias con sus grupos de industrias/sectores.
+
+  La consulta es paginada por lo que se puede especificar la cantidad máxima de elementos
+  por página(limit) y el token de continuación(nextToken) que permite avanzar entre páginas.
+  """
+  allIndustries(limit: Int = 20, nextToken: String): IndustryPage!
+
+  """
+  Permite obtener el histórico de los archivos de configuración para industrias/sectores.
+  La consulta es paginada por lo que se puede especificar la cantidad máxima de elementos
+  por página(limit) y el token de continuación(nextToken) que permite avanzar entre páginas.
+  """
+  allIndustriesFiles(limit: Int = 20, nextToken: String): ParamFilePage!
+
+}
+
+type Mutation @extends {
+  """
+  Genera un link para cargar el archivo excel que se utilizará para actualizar una tabla
+  de industrias. La respuesta es el objeto que permitirá cargar el archivo al servidor
+  (incluye un link de subida para el archivo).
+  """
+  newIndustriesFileSpace: ParamFileSpace!
+
+  """
+  Permite actualizar la tabla de sectores e industrias. Recibe como parámetro la fecha
+  de manutención en formato ISO8601 y el ID el archivo de carga(UploadFile).
+  """
+  maintainIndustriesFile(date: AWSDateTime!, name: String!): ParamFile!
+}
+
+type ParamFileSpace {
+  name: ID!
+  url: String!
+}
+
+type ParamFilePage {
+  nextToken: String
+  items: [ParamFile]!
+}
+
+type ParamFile {
+  name: String!
+  date: AWSDateTime!
+}
+
+type Sector {
+  id: ID!
+  name: String!
+}
+
+type IndustryGroup {
+  id: ID!
+  name: String!
+  sector: Sector!
+}
+
+type Industry @key(fields: "id") {
+  id: ID!
+  name: String!
+  group: IndustryGroup!
+}
+
+type IndustryPage {
+  nextToken: String
+  items: [Industry]!
+}
+
+union _Entity = Industry

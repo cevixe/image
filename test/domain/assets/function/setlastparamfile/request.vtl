@@ -1,0 +1,8 @@
+#if($ctx.prev.result.items.size() == 0)
+    #return
+#else
+    #set($lastfile = $ctx.prev.result.items[0])
+    #set($input = {"name": $lastfile.name})
+    $util.qr($ctx.stash.put("input", $input))
+    {}
+#end

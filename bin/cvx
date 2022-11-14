@@ -1,0 +1,81 @@
+#!/bin/bash
+
+set -u
+
+display_help(){
+    echo
+    echo "Usage: cvx COMMAND" >&2
+    echo
+    echo "Commands:"
+    echo "   cdk build              Build cevixe project                     "
+    echo "   cdk deploy             Deploy cevixe project                    "
+    echo
+    exit 1
+}
+
+build(){
+    validate
+    cd ${CEVIXE_CDK_HOME} && \
+    cdk synth --quiet -o ${CEVIXE_MOD_HOME}/dist
+    cd ${CEVIXE_MOD_HOME} > /dev/null
+}
+
+deploy(){
+    validate
+    config
+
+    cdk bootstrap
+
+    if [ "$CEVIXE_PROJECT_KIND" == "app" ]; then
+        defaultParams="--app 'dist/' --all --require-approval never"
+        coreStackName="cvx-$CEVIXE_PROJECT_NAME-core-platform"
+        hostedZoneIdParam="--parameters $coreStackName:HostedZoneId=$CEVIXE_ZONE_ID"
+        hostedZoneNameParam="--parameters $coreStackName:HostedZoneName=$CEVIXE_ZONE_NAME"
+        cdk deploy $defaultParams $hostedZoneIdParam $hostedZoneNameParam
+        result=$?
+    elif [ "$CEVIXE_PROJECT_KIND" == "domain" ]; then
+        defaultParams="--app 'dist/' --require-approval never"
+        cdk deploy $defaultParams
+        result=$?
+    else
+        echo "Cevixe project kind not supported"
+        exit 1
+    fi
+
+    exit $result
+}
+
+validate() {
+    if [ -f cevixe.yaml ]; then
+        export CEVIXE_CONFIG_FILE="cevixe.yaml"
+    elif [ -f cevixe.yml ]; then 
+        export CEVIXE_CONFIG_FILE="cevixe.yml"
+    else
+        echo "Cevixe configuration file not found"
+        exit 1
+    fi
+    export CEVIXE_MOD_HOME=$(pwd)
+    export CEVIXE_PROJECT_KIND=$(cat ${CEVIXE_CONFIG_FILE} | yq .project.kind)
+    export CEVIXE_PROJECT_NAME=$(cat ${CEVIXE_CONFIG_FILE} | yq .project.name)
+}
+
+config() {
+    export CDK_DEFAULT_ACCOUNT=$(aws sts get-caller-identity --query "Account" --output text)
+    export CDK_DEFAULT_REGION=${AWS_DEFAULT_REGION:=us-east-1}
+    export CEVIXE_ZONE_ID=${CEVIXE_ZONE_ID:=$(aws route53 list-hosted-zones | jq -r .HostedZones[0].Id | cut -d'/' -f 3)}
+    export CEVIXE_ZONE_NAME=${CEVIXE_ZONE_NAME:=$(aws route53 list-hosted-zones | jq -r .HostedZones[0].Name | head -c-2)}
+}
+
+case "$1" in
+  build)
+    build # calling function build()
+    ;;
+  deploy)
+    deploy # calling function deploy()
+    ;;
+  *)
+#    echo "Usage: $0 {build|deploy}" >&2
+     display_help
+     exit 1
+     ;;
+esac

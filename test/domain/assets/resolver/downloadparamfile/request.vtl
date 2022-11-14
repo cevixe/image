@@ -1,0 +1,3 @@
+#set($input = {"name": $ctx.args.name})
+$util.qr($ctx.stash.put("input", $input))
+{}

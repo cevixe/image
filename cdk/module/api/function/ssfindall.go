@@ -1,0 +1,55 @@
+package function
+
+import (
+	"github.com/cevixe/cdk/common/export"
+	"github.com/cevixe/cdk/module"
+	"github.com/cevixe/cdk/service/appsync"
+)
+
+func NewStateStoreFindAllFn(mod module.Module, props *FunctionProps) Function {
+
+	name := export.StateStoreFindAllFn
+	fn := appsync.NewFunction(mod, name, &appsync.FunctionProps{
+		ApiId:            props.ApiId,
+		DataSourceName:   props.DatasourceName,
+		RequestTemplate:  ssfindallfnrequest,
+		ResponseTemplate: ssfindallfnresponse,
+	})
+	mod.Export(name, *fn.AttrFunctionId())
+	return &impl{name: name, resource: fn}
+}
+
+const ssfindallfnrequest = `
+#set( $args = $ctx.stash.input )
+
+#if( $util.isNullOrBlank(${args["__typename"]}) )
+    $util.error("entity typename not specified", "EntityTypeNotFound")
+#end
+
+#set( $typename = ${args["__typename"]} )
+#set( $section = "active#$typename" )
+
+{
+    "version": "2018-05-29",
+    "operation" : "Query",
+    "index" : "by-section",
+    "query" : {
+        "expression": "#section = :section",
+        "expressionNames" : {
+            "#section" : "__section"
+        },
+         "expressionValues" : {
+            ":section" : $util.dynamodb.toDynamoDBJson($section)
+        }
+    },
+    "scanIndexForward": false,
+    "limit": $util.defaultIfNull(${args.limit}, 20),
+    "nextToken": $util.toJson($util.defaultIfNullOrBlank($args.nextToken, null))
+}
+`
+const ssfindallfnresponse = `
+#if($ctx.error)
+    $util.error($ctx.error.message, $ctx.error.type)
+#end
+$util.toJson($ctx.result)
+`
