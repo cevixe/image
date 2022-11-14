@@ -7,6 +7,7 @@ import (
 	"github.com/cevixe/cdk/naming"
 
 	"github.com/aws/aws-cdk-go/awscdk/v2/awslambda"
+	"github.com/aws/aws-cdk-go/awscdk/v2/awslogs"
 	awsgo "github.com/aws/aws-cdk-go/awscdklambdagoalpha/v2"
 	"github.com/aws/jsii-runtime-go"
 )
@@ -24,6 +25,8 @@ func NewGolangFunction(mod module.Module, alias string, entry string) awslambda.
 		Tracing:      awslambda.Tracing_ACTIVE,
 		MemorySize:   jsii.Number(256),
 		Entry:        jsii.String(entryPath),
+		Runtime:      awslambda.Runtime_GO_1_X(),
+		LogRetention: awslogs.RetentionDays_ONE_MONTH,
 		Role:         role,
 	})
 }
