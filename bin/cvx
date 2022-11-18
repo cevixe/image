@@ -24,7 +24,7 @@ deploy(){
     validate
     config
 
-    cdk bootstrap
+    cdk bootstrap aws://${CDK_DEFAULT_ACCOUNT}/${CDK_DEFAULT_REGION}
 
     if [ "$CEVIXE_PROJECT_KIND" == "app" ]; then
         defaultParams="--app 'dist/' --all --require-approval never"
