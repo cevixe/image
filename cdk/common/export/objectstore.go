@@ -1,4 +1,4 @@
-package objectstore
+package export
 
 const (
 	ObjectStoreName string = "objectstorename"

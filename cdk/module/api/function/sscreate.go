@@ -30,7 +30,7 @@ const sscreatefnrequest = `
 #set( $id = $util.autoUlid() )
 #set( $createdBy = $util.defaultIfNullOrBlank($ctx.identity.username,"unknown") )
 #set( $createdAt = $util.time.nowISO8601() )
-#set( $section = "active#$typename" )
+#set( $space = "alive#$typename" )
 
 #set( $tracingHeader = $context.request.headers["x-amzn-trace-id"] )
 #set( $transaction = $util.defaultIfNullOrBlank($tracingHeader.replaceAll("Root=", ""), $util.autoId()) )
@@ -43,8 +43,8 @@ $util.qr( $args.put("updatedAt", $createdAt) )
 
 $util.qr( $args.put("__typename", $typename) )
 $util.qr( $args.put("__transaction", $transaction) )
-$util.qr( $args.put("__archived", false) )
-$util.qr( $args.put("__section", $section) )
+$util.qr( $args.put("__status", "alive") )
+$util.qr( $args.put("__space", $space) )
 
 #set( $attributes = $util.dynamodb.toMapValues($args) )
 

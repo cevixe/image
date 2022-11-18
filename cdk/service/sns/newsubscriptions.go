@@ -3,6 +3,7 @@ package sns
 import (
 	"fmt"
 
+	"github.com/aws/aws-cdk-go/awscdk/v2/awsiam"
 	"github.com/aws/aws-cdk-go/awscdk/v2/awslambda"
 	"github.com/aws/aws-cdk-go/awscdk/v2/awslambdaeventsources"
 	"github.com/aws/aws-cdk-go/awscdk/v2/awssns"
@@ -15,7 +16,7 @@ import (
 type Filter = map[string]awssns.SubscriptionFilter
 
 type SubProps struct {
-	Topic    awssns.Topic       `field:"required"`
+	Topic    awssns.ITopic      `field:"required"`
 	Function awslambda.Function `field:"required"`
 	Filters  *[]*Filter         `field:"optional"`
 	Queue    awssqs.Queue       `field:"optional"`
@@ -81,6 +82,25 @@ func newQueueSubscriptions(mod module.Module, alias string, props *SubProps) *[]
 		},
 	)
 	props.Function.AddEventSource(source)
+
+	sqsPolicyStatement := awsiam.NewPolicyStatement(&awsiam.PolicyStatementProps{
+		Effect:  awsiam.Effect_ALLOW,
+		Actions: &[]*string{jsii.String("sqs:sendMessage")},
+		Conditions: &map[string]interface{}{
+			"ArnEquals": &map[string]*string{
+				"aws:SourceArn": props.Topic.TopicArn(),
+			},
+		},
+		Resources: &[]*string{props.Queue.QueueArn()},
+		Principals: &[]awsiam.IPrincipal{
+			awsiam.NewServicePrincipal(jsii.String("sns.amazonaws.com"), nil),
+		},
+	})
+
+	queuePolicyName := naming.NewName(mod, naming.ResType_SQSQueuePolicy, alias)
+	awssqs.NewQueuePolicy(mod.Resource(), queuePolicyName.Logical(), &awssqs.QueuePolicyProps{
+		Queues: &[]awssqs.IQueue{props.Queue},
+	}).Document().AddStatements(sqsPolicyStatement)
 
 	subs := make([]awssns.Subscription, 0)
 

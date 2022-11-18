@@ -23,7 +23,11 @@ func (h *Handler) Handle(ctx context.Context, request events.DynamoDBEvent) erro
 
 	entries := make([]types.PublishBatchRequestEntry, 0)
 	for _, record := range request.Records {
-		item := event.From_DynamoDBEventRecord(record)
+		item, err := event.From_DynamoDBEventRecord(record)
+		if err != nil {
+			return err
+		}
+
 		entries = append(entries, event.To_SNSPublishBatchRequestEntry(item))
 	}
 

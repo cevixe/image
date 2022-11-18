@@ -44,7 +44,8 @@ const (
 
 // AWS Simple Queue Service
 const (
-	ResType_SQSQueue ResType = "que"
+	ResType_SQSQueue       ResType = "que"
+	ResType_SQSQueuePolicy ResType = "qup"
 )
 
 // AWS DynamoDB

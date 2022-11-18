@@ -27,19 +27,19 @@ const ssfindallfnrequest = `
 #end
 
 #set( $typename = ${args["__typename"]} )
-#set( $section = "active#$typename" )
+#set( $space = "alive#$typename" )
 
 {
     "version": "2018-05-29",
     "operation" : "Query",
-    "index" : "by-section",
+    "index" : "by-space",
     "query" : {
-        "expression": "#section = :section",
+        "expression": "#space = :space",
         "expressionNames" : {
-            "#section" : "__section"
+            "#space" : "__space"
         },
          "expressionValues" : {
-            ":section" : $util.dynamodb.toDynamoDBJson($section)
+            ":space" : $util.dynamodb.toDynamoDBJson($space)
         }
     },
     "scanIndexForward": false,

@@ -35,7 +35,7 @@ const ssdeletefnrequest = `
 #end
 
 #set( $typename = ${args["__typename"]} )
-#set( $section = "archived#${typename}" )
+#set( $space = "dead#${typename}" )
 
 #set( $updatedBy = $util.defaultIfNullOrBlank($ctx.identity.username,"unknown") )
 #set( $updatedAt = $util.time.nowISO8601() )
@@ -76,16 +76,16 @@ const ssdeletefnrequest = `
     $!{expNames.put("#__transaction", "__transaction")}
     $!{expValues.put(":__transaction", $util.dynamodb.toDynamoDB($transaction))}
 
-    $!{expSet.put("#__archived", ":__archived")}
-    $!{expNames.put("#__archived", "__archived")}
-    $!{expValues.put(":__archived", $util.dynamodb.toDynamoDB(true))}
+    $!{expSet.put("#__status", ":__status")}
+    $!{expNames.put("#__status", "__status")}
+    $!{expValues.put(":__status", $util.dynamodb.toDynamoDB("dead"))}
 
-    $!{expSet.put("#__section", ":__section")}
-    $!{expNames.put("#__section", "__section")}
-    $!{expValues.put(":__section", $util.dynamodb.toDynamoDB($section))}
+    $!{expSet.put("#__space", ":__space")}
+    $!{expNames.put("#__space", "__space")}
+    $!{expValues.put(":__space", $util.dynamodb.toDynamoDB($space))}
 
     ## Cevixe reserved properties
-    #set( $reservedIdx = ["by-section"] )
+    #set( $reservedIdx = ["by-space"] )
 
     ## Iterate through indexes
     #foreach( $idx in $util.map.copyAndRemoveAll($args.indexes, $reservedIdx) )
@@ -132,23 +132,23 @@ const ssdeletefnrequest = `
     },
     #if( $util.isNullOrBlank(${args.version}) )
     "condition" : {
-        "expression" : "#archived = :expectedArchived",
+        "expression" : "#status = :expectedStatus",
         "expressionNames" : {
-            "#archived" : "__archived"
+            "#status" : "__status"
         },
         "expressionValues" : {
-            ":expectedArchived" : $util.dynamodb.toDynamoDBJson(false)
+            ":expectedStatus" : $util.dynamodb.toDynamoDBJson("alive")
         }
     }
     #else
     "condition" : {
-        "expression" : "#archived = :expectedArchived AND #version = :expectedVersion",
+        "expression" : "#status = :expectedStatus AND #version = :expectedVersion",
         "expressionNames" : {
-            "#archived" : "__archived",
+            "#status" : "__status",
             "#version": "version"
         },
         "expressionValues" : {
-            ":expectedArchived" : $util.dynamodb.toDynamoDBJson(false),
+            ":expectedStatus" : $util.dynamodb.toDynamoDBJson("alive"),
             ":expectedVersion" : $util.dynamodb.toDynamoDBJson($args.version)
         }
     }

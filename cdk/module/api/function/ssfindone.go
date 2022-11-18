@@ -45,7 +45,7 @@ const ssfindonefnresponse = `
 #if($ctx.result["__typename"] != $ctx.stash.input["__typename"])
 	#return
 #end
-#if($ctx.result["__archived"])
+#if($ctx.result["__status"] == "dead")
 	#return
 #end
 $util.toJson($ctx.result)

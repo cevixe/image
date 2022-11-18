@@ -1,4 +1,4 @@
-package commandstore
+package export
 
 const (
 	CommandStoreArn  = "commandstorearn"

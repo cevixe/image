@@ -5,6 +5,7 @@ import (
 
 	"github.com/aws/jsii-runtime-go"
 	"github.com/cevixe/app/pkg/location"
+	"github.com/cevixe/cdk/common/export"
 	"github.com/cevixe/cdk/module"
 	"github.com/cevixe/cdk/service/iam"
 	"github.com/cevixe/cdk/service/lambda"
@@ -20,8 +21,8 @@ func NewObjectStore(mod module.Module, props *ObjectStoreProps) ObjectStore {
 	presign.AddEnvironment(jsii.String("CVX_OBJECT_STORE"), bucket.BucketName(), nil)
 	presign.AddToRolePolicy(iam.NewS3CrudPol(*bucket.BucketArn()))
 
-	mod.Export(ObjectStoreName, *bucket.BucketName())
-	mod.Export(ObjectStoreArn, *bucket.BucketArn())
+	mod.Export(export.ObjectStoreName, *bucket.BucketName())
+	mod.Export(export.ObjectStoreArn, *bucket.BucketArn())
 
 	return &impl{
 		module:   mod,

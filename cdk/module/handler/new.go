@@ -2,15 +2,24 @@ package handler
 
 import (
 	"fmt"
+	"log"
 
+	"github.com/aws/aws-cdk-go/awscdk/v2/awssns"
+	"github.com/aws/jsii-runtime-go"
+	"github.com/cevixe/cdk/common/export"
 	"github.com/cevixe/cdk/module"
+	"github.com/cevixe/cdk/module/bus"
 	"github.com/cevixe/cdk/module/function"
+	"github.com/cevixe/cdk/service/iam"
+	"github.com/cevixe/cdk/service/sns"
+	"github.com/cevixe/cdk/service/sqs"
 )
 
 /*
 Propiedades de configuración de una función handler.
 */
 type HandlerProps struct {
+	Name string `field:"required" json:"main"`
 	/*
 		Tipo de la función handler (HandlerType). Si no se especifica un valor
 		se utilizará: HandlerType_Basic
@@ -46,17 +55,71 @@ type HandlerProps struct {
 
 	*/
 	Commands *[]string `field:"optional" json:"commands"`
-
-	Entry string `field:"optional" json:"main"`
 }
 
-func NewHandler(mod module.Module, alias string, props *HandlerProps) Handler {
+func NewHandler(
+	mod module.Module,
+	advancedBus awssns.ITopic,
+	standardBus awssns.ITopic,
+	props *HandlerProps,
+) Handler {
 
-	main := props.Entry
-	if main == "" {
-		main = fmt.Sprintf("%s/cmd/handler/%s/main.go", mod.Location(), alias)
+	entryFormat := "/cmd/handler/%s"
+	entry := fmt.Sprintf(entryFormat, props.Name)
+	fn := function.NewFunction(mod, props.Name, entry)
+
+	commandStoreArn := mod.Import("core", export.CommandStoreArn)
+	commandStoreName := mod.Import("core", export.CommandStoreName)
+
+	stateStoreArn := mod.Import(mod.Name(), export.StateStoreArn)
+	stateStoreName := mod.Import(mod.Name(), export.StateStoreName)
+
+	objectStoreArn := mod.Import(mod.Name(), export.ObjectStoreArn)
+	objectStoreName := mod.Import(mod.Name(), export.ObjectStoreName)
+
+	fn.Resource().AddEnvironment(jsii.String("CVX_STATE_STORE"), jsii.String(stateStoreName), nil)
+	fn.Resource().AddEnvironment(jsii.String("CVX_OBJECT_STORE"), jsii.String(objectStoreName), nil)
+	fn.Resource().AddEnvironment(jsii.String("CVX_COMMAND_STORE"), jsii.String(commandStoreName), nil)
+
+	fn.Resource().AddToRolePolicy(iam.NewDynCrudPol(stateStoreArn))
+	fn.Resource().AddToRolePolicy(iam.NewS3CrudPol(objectStoreArn))
+	fn.Resource().AddToRolePolicy(iam.NewDynWritePol(commandStoreArn))
+
+	filters := make([]*bus.Filter, 0)
+	if props.Events != nil && len(*props.Events) > 0 {
+		filters = append(filters, bus.NewFilter("event", *props.Events...))
 	}
-	fn := function.NewFunction(mod, alias, main)
+	if props.Commands != nil && len(*props.Commands) > 0 {
+		filters = append(filters, bus.NewFilter("command", *props.Commands...))
+	}
+	if len(filters) == 0 {
+		log.Fatalf("cannot determine message filter for handler: %s\n", props.Name)
+	}
+
+	switch props.Type {
+	case HandlerType_Advanced:
+		sns.NewSubscriptions(mod, props.Name, &sns.SubProps{
+			Topic:    advancedBus,
+			Function: fn.Resource(),
+			Filters:  &filters,
+			Queue:    sqs.NewQueue(mod, props.Name, sqs.QueueType_FIFO),
+		})
+	case HandlerType_Standard:
+		sns.NewSubscriptions(mod, props.Name, &sns.SubProps{
+			Topic:    standardBus,
+			Function: fn.Resource(),
+			Filters:  &filters,
+			Queue:    sqs.NewQueue(mod, props.Name, sqs.QueueType_Standard),
+		})
+	case HandlerType_Basic:
+		sns.NewSubscriptions(mod, props.Name, &sns.SubProps{
+			Topic:    standardBus,
+			Function: fn.Resource(),
+			Filters:  &filters,
+		})
+	default:
+		log.Fatalf("unsupported handler type: %v\n", props.Type)
+	}
 
 	return &handlerImpl{
 		Function: fn,

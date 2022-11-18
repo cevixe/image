@@ -31,4 +31,4 @@ project:
     handlers:
       - name: updateindustries
         type: advanced
-        events: [IndustriesFileCreated]
+        events: [industries-file.created.v1]

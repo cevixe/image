@@ -57,7 +57,7 @@ const ssupdatefnrequest = `
     #set( $expRemove = [] )
 
     ## Cevixe reserved properties
-    #set( $reservedProps = ["__typename","id","version","createdAt","createdBy","updatedAt","updatedBy","__transaction","__archived","__section"] )
+    #set( $reservedProps = ["__typename","id","version","createdAt","createdBy","updatedAt","updatedBy","__transaction","__status","__space"] )
 
     ## Increment "version" by 1 **
     $!{expAdd.put("version", ":one")}
@@ -140,23 +140,23 @@ const ssupdatefnrequest = `
     },
     #if( $util.isNullOrBlank(${args.version}) )
     "condition" : {
-        "expression" : "#archived = :expectedArchived",
+        "expression" : "#status = :expectedStatus",
         "expressionNames" : {
-            "#archived" : "__archived"
+            "#status" : "__status"
         },
         "expressionValues" : {
-            ":expectedArchived" : $util.dynamodb.toDynamoDBJson(false)
+            ":expectedStatus" : $util.dynamodb.toDynamoDBJson("alive")
         }
     }
     #else
     "condition" : {
-        "expression" : "#archived = :expectedArchived AND #version = :expectedVersion",
+        "expression" : "#status = :expectedStatus AND #version = :expectedVersion",
         "expressionNames" : {
-            "#archived" : "__archived",
+            "#status" : "__status",
             "#version": "version"
         },
         "expressionValues" : {
-            ":expectedArchived" : $util.dynamodb.toDynamoDBJson(false),
+            ":expectedStatus" : $util.dynamodb.toDynamoDBJson("alive"),
             ":expectedVersion" : $util.dynamodb.toDynamoDBJson($args.version)
         }
     }

@@ -1,6 +1,9 @@
 github.com/aws/aws-cdk-go/awscdk v1.179.0-devpreview h1:w+Jhrb2b+DEmouq9pIvYPtIzNDQ3Tr+I6XN7c/1VWBo=
 github.com/aws/aws-cdk-go/awscdk v1.179.0-devpreview/go.mod h1:d21XZeUoQf9PDCiKRYT4ZDPcyMjBKqIFNEyLtJgavx4=
 github.com/aws/constructs-go/constructs/v3 v3.4.135/go.mod h1:QPxJbR3iPa7rg2Vv8UHZUpa3CMMNC+lPeXdtw9hosiM=
+github.com/cevixe/sdk v0.0.0-20221115141205-c62bef525728 h1:uittayWwKIE/YLzYixVcm8G8/JT12nQIyRwP+sCR0y8=
+github.com/cevixe/sdk v0.0.0-20221115141205-c62bef525728/go.mod h1:+voyBOzb8Jl1ocRg51MHinKKtQTkQlyyTYmvPm+nCJQ=
+github.com/stretchr/objx v0.5.0/go.mod h1:Yh+to48EsGEfYuaHDzXPcE3xhTkx73EhmCGUpEOglKo=
+github.com/stretchr/testify v1.8.1/go.mod h1:w2LPCIKwWwSfY2zedu0+kehJoqGctiVI29o6fzry7u4=
 golang.org/x/crypto v0.1.0/go.mod h1:RecgLatLF4+eUMCP1PoPZQb+cVrJcOPbHkTkbkB9sbw=
-golang.org/x/net v0.1.0/go.mod h1:Cx3nUiGt4eDBEyega/BKRp+/AlGL8hYe7U9odMt2Cco=
 golang.org/x/term v0.1.0/go.mod h1:jbD1KX2456YbFQfuXm/mYQcufACuNUgVhRMnK/tPxf8=

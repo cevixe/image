@@ -29,8 +29,8 @@ func NewStateStore(mod module.Module, alias string, props *StateStoreProps) Stat
 			SortKey:      dynamodb.NewAttribute(fmt.Sprintf("__%s-sk", idx), awsdynamodb.AttributeType_STRING),
 		}
 	}
-	indexes["by-section"] = &dynamodb.Key{
-		PartitionKey: dynamodb.NewAttribute("__section", awsdynamodb.AttributeType_STRING),
+	indexes["by-status"] = &dynamodb.Key{
+		PartitionKey: dynamodb.NewAttribute("__status", awsdynamodb.AttributeType_STRING),
 		SortKey:      dynamodb.NewAttribute("id", awsdynamodb.AttributeType_STRING),
 	}
 

@@ -11,6 +11,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	"github.com/cevixe/sdk/event"
+	"github.com/pkg/errors"
 )
 
 type Handler struct {
@@ -23,7 +24,11 @@ func (h *Handler) Handle(ctx context.Context, request events.SQSEvent) error {
 	writes := make([]types.WriteRequest, 0)
 	for _, record := range request.Records {
 		item := event.From_SQSMessage(record)
-		writes = append(writes, event.To_DynamodbWriteRequest(item))
+		statement, err := event.To_DynamodbWriteRequest(item)
+		if err != nil {
+			return errors.Wrap(err, "cannot generate write request")
+		}
+		writes = append(writes, *statement)
 	}
 
 	_, err := h.client.BatchWriteItem(ctx, &dynamodb.BatchWriteItemInput{

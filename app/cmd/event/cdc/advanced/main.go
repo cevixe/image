@@ -21,11 +21,17 @@ type Handler struct {
 func (h *Handler) Handle(ctx context.Context, request events.DynamoDBEvent) error {
 
 	for _, record := range request.Records {
-		item := event.From_DynamoDBEventRecord(record)
+
+		item, err := event.From_DynamoDBEventRecord(record)
+		if err != nil {
+			return err
+		}
+
 		input := event.To_SNSPublishInput(item)
 		input.TopicArn = jsii.String(h.topic)
-		_, err := h.client.Publish(ctx, &input)
-		return err
+		if _, err = h.client.Publish(ctx, &input); err != nil {
+			return err
+		}
 	}
 
 	return nil
