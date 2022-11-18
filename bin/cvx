@@ -57,6 +57,11 @@ validate() {
     export CEVIXE_MOD_HOME=$(pwd)
     export CEVIXE_PROJECT_KIND=$(cat ${CEVIXE_CONFIG_FILE} | yq .project.kind)
     export CEVIXE_PROJECT_NAME=$(cat ${CEVIXE_CONFIG_FILE} | yq .project.name)
+
+    echo "CEVIXE_MOD_HOME=${CEVIXE_MOD_HOME}"
+    echo "CEVIXE_CONFIG_FILE=${CEVIXE_CONFIG_FILE}"
+    echo "CEVIXE_PROJECT_KIND=${CEVIXE_PROJECT_KIND}"
+    echo "CEVIXE_PROJECT_NAME=${CEVIXE_PROJECT_NAME}"
 }
 
 config() {
@@ -64,6 +69,11 @@ config() {
     export CDK_DEFAULT_REGION=${AWS_DEFAULT_REGION:=us-east-1}
     export CEVIXE_ZONE_ID=${CEVIXE_ZONE_ID:=$(aws route53 list-hosted-zones | jq -r .HostedZones[0].Id | cut -d'/' -f 3)}
     export CEVIXE_ZONE_NAME=${CEVIXE_ZONE_NAME:=$(aws route53 list-hosted-zones | jq -r .HostedZones[0].Name | head -c-2)}
+
+    echo "CDK_DEFAULT_ACCOUNT=${CDK_DEFAULT_ACCOUNT}"    
+    echo "CDK_DEFAULT_REGION=${CDK_DEFAULT_REGION}"
+    echo "CEVIXE_ZONE_ID=${CEVIXE_ZONE_ID}"
+    echo "CEVIXE_ZONE_NAME=${CEVIXE_ZONE_NAME}"
 }
 
 case "$1" in
