@@ -30,10 +30,6 @@ func New(scope constructs.Construct, typ Type, app string, name string) Module {
 	stackName := fmt.Sprintf("cvx-%s-%s-%s", app, name, string(typ))
 	resource := awscdk.NewStack(scope, jsii.String(name), &awscdk.StackProps{
 		StackName: jsii.String(stackName),
-		Env: &awscdk.Environment{
-			Account: jsii.String(os.Getenv("CDK_DEFAULT_ACCOUNT")),
-			Region:  jsii.String(os.Getenv("CDK_DEFAULT_REGION")),
-		},
 	})
 
 	return &impl{app: app, name: name, location: location, resource: resource}
