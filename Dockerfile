@@ -29,18 +29,11 @@ ENV PATH="/cevixe/bin:${PATH}"
 # Cevixe workspace
 
 COPY app /cevixe/app
-WORKDIR /cevixe/app
-RUN go mod download
+RUN cd /cevixe/app && go mod download
 
 COPY cdk /cevixe/cdk
-
-WORKDIR /cevixe/cdk
-RUN go mod download
-
-COPY test/domain /cevixe/mod
+RUN cd /cevixe/cdk && go mod download
 
 # Cevixe workspace
 ENV CEVIXE_CDK_HOME="/cevixe/cdk"
 ENV CEVIXE_APP_HOME="/cevixe/app"
-
-WORKDIR /cevixe/mod
