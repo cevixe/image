@@ -28,5 +28,16 @@ func NewGolangFunction(mod module.Module, alias string, entry string) awslambda.
 		Runtime:      awslambda.Runtime_GO_1_X(),
 		LogRetention: awslogs.RetentionDays_ONE_MONTH,
 		Role:         role,
+		Bundling: &awsgo.BundlingOptions{
+			CgoEnabled: jsii.Bool(false),
+			Environment: &map[string]*string{
+				"GOOS":   jsii.String("linux"),
+				"GOARCH": jsii.String("amd64"),
+			},
+			GoBuildFlags: &[]*string{
+				jsii.String("-buildvcs=false"),
+				jsii.String("-ldflags=\"-s -w\""),
+			},
+		},
 	})
 }
