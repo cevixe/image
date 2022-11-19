@@ -34,6 +34,9 @@ RUN cd /cevixe/app && go mod download
 COPY cdk /cevixe/cdk
 RUN cd /cevixe/cdk && go mod download
 
+COPY test/domain /github/workspace
+WORKDIR /github/workspace
+
 # Cevixe workspace
 ENV CEVIXE_CDK_HOME="/cevixe/cdk"
 ENV CEVIXE_APP_HOME="/cevixe/app"
