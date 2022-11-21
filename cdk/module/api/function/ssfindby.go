@@ -36,6 +36,9 @@ const ssfindbyfnrequest = `
 
 #set( $typename = ${args["__typename"]} )
 #set( $indexName =  ${args["indexName"]} )
+#set( $indexPrefix =  "__" )
+#set( $indexSuffix =  "-pk" )
+#set( $indexName =  "$indexPrefix$indexName$indexSuffix" )
 #set( $indexValue =  ${args["indexValue"]} )
 
 {
