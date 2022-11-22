@@ -2,7 +2,7 @@ module github.com/cevixe/image/tests/domain
 
 go 1.19
 
-require github.com/cevixe/sdk v0.0.0-20221122053329-bce1742ca2e4
+require github.com/cevixe/sdk v0.0.0-20221122055450-2638f39df4d4
 
 require (
 	github.com/Masterminds/semver/v3 v3.1.1 // indirect
