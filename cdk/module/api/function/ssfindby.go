@@ -38,8 +38,8 @@ const ssfindbyfnrequest = `
 #set( $indexName =  ${args["indexName"]} )
 #set( $indexPrefix =  "__" )
 #set( $indexSuffix =  "-pk" )
-#set( $indexName =  "$indexPrefix$indexName$indexSuffix" )
-#set( $indexValue =  ${args["indexValue"]} )
+#set( $indexPkName=  "$indexPrefix$indexName$indexSuffix" )
+#set( $indexPkValue =  ${args["indexValue"]} )
 
 {
     "version": "2018-05-29",
@@ -48,10 +48,10 @@ const ssfindbyfnrequest = `
     "query" : {
         "expression": "#indexPk = :indexPk",
         "expressionNames" : {
-            "#indexPk" : "$indexName"
+            "#indexPk" : "$indexPkName"
         },
          "expressionValues" : {
-            ":indexPk" : $util.dynamodb.toDynamoDBJson($indexValue)
+            ":indexPk" : $util.dynamodb.toDynamoDBJson($indexPkValue)
         }
     },
     "scanIndexForward": false,
