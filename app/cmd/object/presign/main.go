@@ -46,7 +46,7 @@ func (h *Handler) Handle(ctx context.Context, input *Input) (*Output, error) {
 		if err != nil {
 			return nil, err
 		}
-		if *exists {
+		if !(*exists) {
 			return nil, nil
 		}
 		url, err := h.client.DownloadURL(ctx, input.Name, 5*time.Minute)
