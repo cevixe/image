@@ -2,8 +2,6 @@ package main
 
 import (
 	"context"
-	"encoding/json"
-	"fmt"
 	"os"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -61,8 +59,6 @@ func (h *Handler) Handle(ctx context.Context, request events.SQSEvent) error {
 		})
 	}
 
-	jsonString, _ := json.Marshal(writeItems)
-	fmt.Println(string(jsonString))
 	_, err := h.client.TransactWriteItems(ctx, &dynamodb.TransactWriteItemsInput{
 		TransactItems: writeItems,
 	})
