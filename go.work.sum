@@ -18,8 +18,8 @@ github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA
 github.com/cevixe/aws-sdk-go v0.16.2/go.mod h1:tsDKv8R1lBGj6+qLcFQN+fPPIkW585BD8zQxpemuFCk=
 github.com/cevixe/core-sdk-go v0.13.0/go.mod h1:3LJnRqoSLz1T5KS3wo2bfIkhBp+O5nkyStTytWim1gg=
 github.com/cevixe/sdk v0.0.0-20221115141205-c62bef525728 h1:uittayWwKIE/YLzYixVcm8G8/JT12nQIyRwP+sCR0y8=
-github.com/cevixe/sdk v0.0.0-20221122173300-aa529a8dff1c h1:QiiswLN9Gmokx/LPthLuhPPVkMRtsclLMuph7RVG6y4=
-github.com/cevixe/sdk v0.0.0-20221122173300-aa529a8dff1c/go.mod h1:WAdkh9wyyemCHmGvy9PyuTxw3UQpk+jnuFdbp2pvnig=
+github.com/cevixe/sdk v0.0.0-20221122234914-4c88008485a9 h1:BijxBR2TRlx0EIIkYjzpON1keDCrBqD1KO+IR3msLJk=
+github.com/cevixe/sdk v0.0.0-20221122234914-4c88008485a9/go.mod h1:WAdkh9wyyemCHmGvy9PyuTxw3UQpk+jnuFdbp2pvnig=
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=
 github.com/cncf/udpa/go v0.0.0-20191209042840-269d4d468f6f/go.mod h1:M8M6+tZqaGXZJjfX53e64911xZQV5JYwmTeXPW+k8Sc=
 github.com/cncf/udpa/go v0.0.0-20201120205902-5459f2c99403/go.mod h1:WmhPx2Nbnhtbo57+VJT5O0JRkEi1Wbu0z5j0R8u5Hbk=
