@@ -8,7 +8,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/s3 v1.29.1
 	github.com/aws/aws-sdk-go-v2/service/sns v1.18.4
 	github.com/aws/jsii-runtime-go v1.71.0
-	github.com/cevixe/sdk v0.0.0-20221122003036-535d82b5be59
+	github.com/cevixe/sdk v0.0.0-20221122041338-59f0002eb883
 	github.com/pkg/errors v0.9.1
 )
 
