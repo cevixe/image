@@ -2,15 +2,13 @@ package main
 
 import (
 	"context"
-	"log"
 	"os"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
-	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
-	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
-	"github.com/cevixe/sdk/event"
+	"github.com/cevixe/sdk/client/config"
+	"github.com/cevixe/sdk/message"
 	"github.com/pkg/errors"
 )
 
@@ -21,35 +19,29 @@ type Handler struct {
 
 func (h *Handler) Handle(ctx context.Context, request events.SQSEvent) error {
 
-	writes := make([]types.WriteRequest, 0)
+	messages := make([]message.Message, 0)
 	for _, record := range request.Records {
-		item := event.From_SQSMessage(record)
-		statement, err := event.To_DynamodbWriteRequest(item)
+
+		item, err := message.FromSQS(record)
 		if err != nil {
-			return errors.Wrap(err, "cannot generate write request")
+			return errors.Wrap(err, "cannot read message from sqs")
 		}
-		writes = append(writes, *statement)
+		messages = append(messages, item)
 	}
 
-	_, err := h.client.BatchWriteItem(ctx, &dynamodb.BatchWriteItemInput{
-		RequestItems: map[string][]types.WriteRequest{
-			h.table: writes,
-		},
-	})
-	return err
+	err := message.Write(ctx, messages...)
+	if err != nil {
+		return errors.Wrap(err, "cannot read message from sqs")
+	}
+
+	return nil
 }
 
 func main() {
-	region := os.Getenv("AWS_REGION")
 	table := os.Getenv("CVX_EVENT_STORE")
 
-	cfg, err := config.LoadDefaultConfig(context.TODO(),
-		config.WithRegion(region),
-	)
-	if err != nil {
-		log.Fatalf("unable to load SDK config, %v", err)
-	}
-
+	ctx := context.Background()
+	cfg := config.NewConfig(ctx)
 	client := dynamodb.NewFromConfig(cfg)
 
 	handler := &Handler{
@@ -57,5 +49,5 @@ func main() {
 		client: client,
 	}
 
-	lambda.Start(handler.Handle)
+	lambda.StartWithOptions(handler.Handle, lambda.WithContext(ctx))
 }

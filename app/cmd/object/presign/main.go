@@ -3,13 +3,12 @@ package main
 import (
 	"context"
 	"fmt"
-	"log"
 	"os"
 	"time"
 
 	"github.com/aws/aws-lambda-go/lambda"
-	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
+	"github.com/cevixe/sdk/client/config"
 	"github.com/cevixe/sdk/object"
 )
 
@@ -34,7 +33,7 @@ type Handler struct {
 	client object.Client
 }
 
-func (h *Handler) handle(ctx context.Context, input *Input) (*Output, error) {
+func (h *Handler) Handle(ctx context.Context, input *Input) (*Output, error) {
 	switch input.Operation {
 	case Operation_Upload:
 		url, err := h.client.UploadURL(ctx, input.Name, 5*time.Minute)
@@ -61,15 +60,10 @@ func (h *Handler) handle(ctx context.Context, input *Input) (*Output, error) {
 }
 
 func main() {
-	region := os.Getenv("AWS_REGION")
 	bucket := os.Getenv("CVX_OBJECT_STORE")
 
-	cfg, err := config.LoadDefaultConfig(context.TODO(),
-		config.WithRegion(region),
-	)
-	if err != nil {
-		log.Fatalf("unable to load SDK config, %v", err)
-	}
+	ctx := context.Background()
+	cfg := config.NewConfig(ctx)
 
 	standardClient := s3.NewFromConfig(cfg)
 	presignClient := s3.NewPresignClient(standardClient)
@@ -77,5 +71,5 @@ func main() {
 	objectClient := object.NewClient(bucket, presignClient, standardClient)
 	handler := &Handler{client: objectClient}
 
-	lambda.Start(handler.handle)
+	lambda.StartWithOptions(handler.Handle, lambda.WithContext(ctx))
 }

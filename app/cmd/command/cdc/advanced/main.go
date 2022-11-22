@@ -2,15 +2,15 @@ package main
 
 import (
 	"context"
-	"log"
 	"os"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
-	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/sns"
 	"github.com/aws/jsii-runtime-go"
-	"github.com/cevixe/sdk/command"
+	"github.com/cevixe/sdk/client/config"
+	"github.com/cevixe/sdk/message"
+	"github.com/pkg/errors"
 )
 
 type Handler struct {
@@ -21,27 +21,32 @@ type Handler struct {
 func (h *Handler) Handle(ctx context.Context, request events.DynamoDBEvent) error {
 
 	for _, record := range request.Records {
-		item := command.From_DynamoDBEventRecord(record)
-		input := command.To_SNSPublishInput(item)
+
+		item, err := message.FromStream(record)
+		if err != nil {
+			return errors.Wrap(err, "cannot read message from dynamodb stream")
+		}
+
+		input, err := message.ToSNS_Input(item)
+		if err != nil {
+			return errors.Wrap(err, "cannot generate sns input from message")
+		}
+
 		input.TopicArn = jsii.String(h.topic)
-		_, err := h.client.Publish(ctx, &input)
-		return err
+		_, err = h.client.Publish(ctx, input)
+		if err != nil {
+			return errors.Wrap(err, "cannot publish message to sns topic")
+		}
 	}
 
 	return nil
 }
 
 func main() {
-	region := os.Getenv("AWS_REGION")
 	topic := os.Getenv("CVX_EVENT_BUS")
 
-	cfg, err := config.LoadDefaultConfig(context.TODO(),
-		config.WithRegion(region),
-	)
-	if err != nil {
-		log.Fatalf("unable to load SDK config, %v", err)
-	}
-
+	ctx := context.Background()
+	cfg := config.NewConfig(ctx)
 	client := sns.NewFromConfig(cfg)
 
 	handler := &Handler{
@@ -49,5 +54,5 @@ func main() {
 		client: client,
 	}
 
-	lambda.Start(handler.Handle)
+	lambda.StartWithOptions(handler.Handle, lambda.WithContext(ctx))
 }

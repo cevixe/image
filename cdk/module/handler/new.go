@@ -80,6 +80,9 @@ func NewHandler(
 	fn.Resource().AddEnvironment(jsii.String("CVX_STATE_STORE"), jsii.String(stateStoreName), nil)
 	fn.Resource().AddEnvironment(jsii.String("CVX_OBJECT_STORE"), jsii.String(objectStoreName), nil)
 	fn.Resource().AddEnvironment(jsii.String("CVX_COMMAND_STORE"), jsii.String(commandStoreName), nil)
+	fn.Resource().AddEnvironment(jsii.String("CVX_APP_NAME"), jsii.String(mod.App()), nil)
+	fn.Resource().AddEnvironment(jsii.String("CVX_DOMAIN_NAME"), jsii.String(mod.Name()), nil)
+	fn.Resource().AddEnvironment(jsii.String("CVX_HANDLER_NAME"), jsii.String(props.Name), nil)
 
 	fn.Resource().AddToRolePolicy(iam.NewDynCrudPol(stateStoreArn))
 	fn.Resource().AddToRolePolicy(iam.NewS3CrudPol(objectStoreArn))
@@ -98,6 +101,7 @@ func NewHandler(
 
 	switch props.Type {
 	case HandlerType_Advanced:
+		fn.Resource().AddEnvironment(jsii.String("CVX_HANDLER_MODE"), jsii.String("advanced"), nil)
 		sns.NewSubscriptions(mod, props.Name, &sns.SubProps{
 			Topic:    advancedBus,
 			Function: fn.Resource(),
@@ -105,6 +109,7 @@ func NewHandler(
 			Queue:    sqs.NewQueue(mod, props.Name, sqs.QueueType_FIFO),
 		})
 	case HandlerType_Standard:
+		fn.Resource().AddEnvironment(jsii.String("CVX_HANDLER_MODE"), jsii.String("advanced"), nil)
 		sns.NewSubscriptions(mod, props.Name, &sns.SubProps{
 			Topic:    standardBus,
 			Function: fn.Resource(),
@@ -112,6 +117,7 @@ func NewHandler(
 			Queue:    sqs.NewQueue(mod, props.Name, sqs.QueueType_Standard),
 		})
 	case HandlerType_Basic:
+		fn.Resource().AddEnvironment(jsii.String("CVX_HANDLER_MODE"), jsii.String("advanced"), nil)
 		sns.NewSubscriptions(mod, props.Name, &sns.SubProps{
 			Topic:    standardBus,
 			Function: fn.Resource(),
