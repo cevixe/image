@@ -62,7 +62,7 @@ func (h *Handler) Handle(ctx context.Context, request events.SQSEvent) error {
 	}
 
 	jsonString, _ := json.Marshal(writeItems)
-	fmt.Println(jsonString)
+	fmt.Println(string(jsonString))
 	_, err := h.client.TransactWriteItems(ctx, &dynamodb.TransactWriteItemsInput{
 		TransactItems: writeItems,
 	})
