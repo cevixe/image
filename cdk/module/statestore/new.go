@@ -29,12 +29,11 @@ func NewStateStore(mod module.Module, alias string, props *StateStoreProps) Stat
 			SortKey:      dynamodb.NewAttribute("id", awsdynamodb.AttributeType_STRING),
 		}
 	}
-	/*
-		indexes["by-space"] = &dynamodb.Key{
-			PartitionKey: dynamodb.NewAttribute("__space", awsdynamodb.AttributeType_STRING),
-			SortKey:      dynamodb.NewAttribute("id", awsdynamodb.AttributeType_STRING),
-		}
-	*/
+
+	indexes["by-status"] = &dynamodb.Key{
+		PartitionKey: dynamodb.NewAttribute("__status", awsdynamodb.AttributeType_STRING),
+		SortKey:      dynamodb.NewAttribute("id", awsdynamodb.AttributeType_STRING),
+	}
 
 	table := dynamodb.NewTable(mod, alias, &dynamodb.TableProps{
 		Key: &dynamodb.Key{
