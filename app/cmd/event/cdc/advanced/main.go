@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"os"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -25,7 +26,8 @@ func (h *Handler) Handle(ctx context.Context, request events.DynamoDBEvent) erro
 
 		item, err := entity.FromStream(record)
 		if err != nil {
-			return errors.Wrap(err, "cannot read entity from dynamodb stream")
+			fmt.Printf("cannot read entity from dynamodb stream: %v\n", err)
+			continue
 		}
 
 		msg, err := item.LastEvent()
