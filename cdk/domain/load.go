@@ -29,7 +29,8 @@ func Load20221023(scope constructs.Construct, name string, props *spec.Propertie
 	}
 
 	handlers := make([]handler.HandlerProps, 0)
-	for _, item := range props.Handlers {
+	for idx := range props.Handlers {
+		item := props.Handlers[idx]
 		var handlerType handler.HandlerType
 		switch item.Type {
 		case spec.HandlerType_Basic:

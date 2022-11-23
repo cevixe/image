@@ -84,6 +84,7 @@ func NewHandler(
 	fn.Resource().AddEnvironment(jsii.String("CVX_DOMAIN_NAME"), jsii.String(mod.Name()), nil)
 	fn.Resource().AddEnvironment(jsii.String("CVX_HANDLER_NAME"), jsii.String(props.Name), nil)
 
+	fn.Resource().AddToRolePolicy(iam.NewDynReadPol("*"))
 	fn.Resource().AddToRolePolicy(iam.NewDynCrudPol(stateStoreArn))
 	fn.Resource().AddToRolePolicy(iam.NewS3CrudPol(objectStoreArn))
 	fn.Resource().AddToRolePolicy(iam.NewDynWritePol(commandStoreArn))
