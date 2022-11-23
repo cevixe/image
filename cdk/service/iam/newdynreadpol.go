@@ -1,8 +1,6 @@
 package iam
 
 import (
-	"fmt"
-
 	"github.com/aws/aws-cdk-go/awscdk/v2/awsiam"
 	"github.com/aws/jsii-runtime-go"
 )
@@ -20,7 +18,6 @@ func NewDynReadPol(tableArn string) awsiam.PolicyStatement {
 		},
 		Resources: &[]*string{
 			jsii.String(tableArn),
-			jsii.String(fmt.Sprintf("%s/index/*", tableArn)),
 		},
 	})
 }
