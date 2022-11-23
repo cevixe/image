@@ -55,8 +55,8 @@ github.com/aws/jsii-runtime-go v1.71.0 h1:WkTwbKy0Id2UHDUYOB2VDDeXuvShAIW4dUpzBc
 github.com/aws/jsii-runtime-go v1.71.0/go.mod h1:Rwfj+tA+2/1/QfJTq1uXHm4UYaeTRc+zP7lZuEfg8cE=
 github.com/aws/smithy-go v1.13.4 h1:/RN2z1txIJWeXeOkzX+Hk/4Uuvv7dWtCjbmVJcrskyk=
 github.com/aws/smithy-go v1.13.4/go.mod h1:Tg+OJXh4MB2R/uN61Ko2f6hTZwB/ZYGOtib8J3gBHzA=
-github.com/cevixe/sdk v0.0.0-20221122234914-4c88008485a9 h1:BijxBR2TRlx0EIIkYjzpON1keDCrBqD1KO+IR3msLJk=
-github.com/cevixe/sdk v0.0.0-20221122234914-4c88008485a9/go.mod h1:WAdkh9wyyemCHmGvy9PyuTxw3UQpk+jnuFdbp2pvnig=
+github.com/cevixe/sdk v0.0.0-20221123190500-126dbb1a994f h1:ens5mLU9NkALW0B1IyR/cEmjqlDMleGguLL3oz97mq4=
+github.com/cevixe/sdk v0.0.0-20221123190500-126dbb1a994f/go.mod h1:WAdkh9wyyemCHmGvy9PyuTxw3UQpk+jnuFdbp2pvnig=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/google/go-cmp v0.5.8 h1:e6P7q2lk1O+qJJb4BtCQXlK8vWEO8V1ZeuEdJNOqZyg=
