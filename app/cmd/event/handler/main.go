@@ -49,12 +49,8 @@ func (h *Handler) Handle(ctx context.Context, request events.SQSEvent) error {
 
 		writeItems = append(writeItems, types.TransactWriteItem{
 			Put: &types.Put{
-				TableName:           jsii.String(h.table),
-				Item:                itemMap,
-				ConditionExpression: jsii.String("attribute_not_exists(#id)"),
-				ExpressionAttributeNames: map[string]string{
-					"#id": "id",
-				},
+				TableName: jsii.String(h.table),
+				Item:      itemMap,
 			},
 		})
 	}
