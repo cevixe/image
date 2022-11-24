@@ -20,21 +20,22 @@ func NewStateStoreDeleteFn(mod module.Module, props *FunctionProps) Function {
 }
 
 const ssdeletefnrequest = `
+#if( $ctx.stash.skip == true ) 
+	#return($ctx.prev.result)
+#end
+
 #set( $args = $ctx.stash.input )
 
 #if( $util.isNullOrBlank(${args["__typename"]}) )
-    $util.appendError("entity typename not specified", "EntityTypeNotFound")
-    #return
+    $util.error("entity typename not specified", "EntityTypeNotFound")
 #end
 
 #if( $util.isNullOrBlank(${args["id"]}) )
-    $util.appendError("entity id not specified", "EntityIdNotFound")
-    #return
+    $util.error("entity id not specified", "EntityIdNotFound")
 #end
 
 #if( !$util.isNullOrBlank(${args["version"]}) && !$util.isNumber(${args["version"]}) )
-    $util.appendError("entity version not numeric", "EntityVersionNotNumeric")
-    #return
+    $util.error("entity version not numeric", "EntityVersionNotNumeric")
 #end
 
 #set( $typename = ${args["__typename"]} )
@@ -160,8 +161,7 @@ const ssdeletefnrequest = `
 `
 const ssdeletefnresponse = `
 #if($ctx.error)
-    $util.appendError($ctx.error.message, $ctx.error.type)
-    #return
+    $util.error($ctx.error.message, $ctx.error.type)
 #end
 $util.toJson($ctx.result)
 `

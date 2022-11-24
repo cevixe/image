@@ -20,11 +20,14 @@ func NewStateStoreFindAllFn(mod module.Module, props *FunctionProps) Function {
 }
 
 const ssfindallfnrequest = `
+#if( $ctx.stash.skip == true ) 
+	#return($ctx.prev.result)
+#end
+
 #set( $args = $ctx.stash.input )
 
 #if( $util.isNullOrBlank(${args["__typename"]}) )
-    $util.appendError("entity typename not specified", "EntityTypeNotFound")
-    #return
+    $util.error("entity typename not specified", "EntityTypeNotFound")
 #end
 
 #set( $typename = ${args["__typename"]} )
@@ -50,8 +53,7 @@ const ssfindallfnrequest = `
 `
 const ssfindallfnresponse = `
 #if($ctx.error)
-    $util.appendError($ctx.error.message, $ctx.error.type)
-    #return
+    $util.error($ctx.error.message, $ctx.error.type)
 #end
 $util.toJson($ctx.result)
 `

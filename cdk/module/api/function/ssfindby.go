@@ -20,21 +20,22 @@ func NewStateStoreFindByFn(mod module.Module, props *FunctionProps) Function {
 }
 
 const ssfindbyfnrequest = `
+#if( $ctx.stash.skip == true ) 
+	#return($ctx.prev.result)
+#end
+
 #set( $args = $ctx.stash.input )
 
 #if( $util.isNullOrBlank(${args["__typename"]}) )
-    $util.appendError("entity typename not specified", "EntityTypeNotFound")
-    #return
+    $util.error("entity typename not specified", "EntityTypeNotFound")
 #end
 
 #if( $util.isNullOrBlank(${args["indexName"]}) )
-    $util.appendError("entity index name not specified", "EntityIndexNameNotFound")
-    #return
+    $util.error("entity index name not specified", "EntityIndexNameNotFound")
 #end
 
 #if( $util.isNullOrBlank(${args["indexValue"]}) )
-    $util.appendError("entity index value not specified", "EntityIndexValueNotFound")
-    #return
+    $util.error("entity index value not specified", "EntityIndexValueNotFound")
 #end
 
 #set( $typename = ${args["__typename"]} )
@@ -64,8 +65,7 @@ const ssfindbyfnrequest = `
 `
 const ssfindbyfnresponse = `
 #if($ctx.error)
-    $util.appendError($ctx.error.message, $ctx.error.type)
-    #return
+    $util.error($ctx.error.message, $ctx.error.type)
 #end
 $util.toJson($ctx.result)
 `

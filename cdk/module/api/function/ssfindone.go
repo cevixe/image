@@ -20,16 +20,18 @@ func NewStateStoreFindOneFn(mod module.Module, props *FunctionProps) Function {
 }
 
 const ssfindonefnrequest = `
+#if( $ctx.stash.skip == true ) 
+	#return($ctx.prev.result)
+#end
+
 #set( $args = $ctx.stash.input )
 
 #if( $util.isNullOrBlank(${args["__typename"]}) )
-    $util.appendError("entity typename not specified", "EntityTypeNotFound")
-	#return
+    $util.error("entity typename not specified", "EntityTypeNotFound")
 #end
 
 #if( $util.isNullOrBlank(${args["id"]}) )
-    $util.appendError("entity id not specified", "EntityIdNotFound")
-	#return
+    $util.error("entity id not specified", "EntityIdNotFound")
 #end
 
 {
@@ -42,8 +44,7 @@ const ssfindonefnrequest = `
 `
 const ssfindonefnresponse = `
 #if($ctx.error)
-    $util.appendError($ctx.error.message, $ctx.error.type)
-	#return
+    $util.error($ctx.error.message, $ctx.error.type)
 #end
 #if($ctx.result["__typename"] != $ctx.stash.input["__typename"])
 	#return

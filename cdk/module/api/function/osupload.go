@@ -20,11 +20,15 @@ func NewObjectStoreUploadFn(mod module.Module, props *FunctionProps) Function {
 }
 
 const osuploadfnrequest = `
+
+#if( $ctx.stash.skip == true ) 
+	#return($ctx.prev.result)
+#end
+
 #set( $args = $ctx.stash.input )
 
 #if( $util.isNullOrBlank(${args["space"]}) )
-    $util.appendError("object space not specified", "ObjectSpaceNotFound")
-	#return
+    $util.error("object space not specified", "ObjectSpaceNotFound")
 #end
 #set( $space = ${args["space"]} )
 
@@ -60,8 +64,7 @@ const osuploadfnrequest = `
 
 const osuploadfnresponse = `
 #if($ctx.error)
-  $util.appendError($ctx.error.message, $ctx.error.type)
-  #return
+  $util.error($ctx.error.message, $ctx.error.type)
 #end
 $util.toJson($context.result)
 `
