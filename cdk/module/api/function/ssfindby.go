@@ -23,15 +23,18 @@ const ssfindbyfnrequest = `
 #set( $args = $ctx.stash.input )
 
 #if( $util.isNullOrBlank(${args["__typename"]}) )
-    $util.error("entity typename not specified", "EntityTypeNotFound")
+    $util.appendError("entity typename not specified", "EntityTypeNotFound")
+    #return
 #end
 
 #if( $util.isNullOrBlank(${args["indexName"]}) )
-    $util.error("entity index name not specified", "EntityIndexNameNotFound")
+    $util.appendError("entity index name not specified", "EntityIndexNameNotFound")
+    #return
 #end
 
 #if( $util.isNullOrBlank(${args["indexValue"]}) )
-    $util.error("entity index value not specified", "EntityIndexValueNotFound")
+    $util.appendError("entity index value not specified", "EntityIndexValueNotFound")
+    #return
 #end
 
 #set( $typename = ${args["__typename"]} )
@@ -61,7 +64,8 @@ const ssfindbyfnrequest = `
 `
 const ssfindbyfnresponse = `
 #if($ctx.error)
-    $util.error($ctx.error.message, $ctx.error.type)
+    $util.appendError($ctx.error.message, $ctx.error.type)
+    #return
 #end
 $util.toJson($ctx.result)
 `

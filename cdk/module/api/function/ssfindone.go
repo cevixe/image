@@ -23,11 +23,13 @@ const ssfindonefnrequest = `
 #set( $args = $ctx.stash.input )
 
 #if( $util.isNullOrBlank(${args["__typename"]}) )
-    $util.error("entity typename not specified", "EntityTypeNotFound")
+    $util.appendError("entity typename not specified", "EntityTypeNotFound")
+	#return
 #end
 
 #if( $util.isNullOrBlank(${args["id"]}) )
-    $util.error("entity id not specified", "EntityIdNotFound")
+    $util.appendError("entity id not specified", "EntityIdNotFound")
+	#return
 #end
 
 {
@@ -40,7 +42,8 @@ const ssfindonefnrequest = `
 `
 const ssfindonefnresponse = `
 #if($ctx.error)
-    $util.error($ctx.error.message, $ctx.error.type)
+    $util.appendError($ctx.error.message, $ctx.error.type)
+	#return
 #end
 #if($ctx.result["__typename"] != $ctx.stash.input["__typename"])
 	#return

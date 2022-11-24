@@ -23,15 +23,17 @@ const ssupdatefnrequest = `
 #set( $args = $ctx.stash.input )
 
 #if( $util.isNullOrBlank(${args["__typename"]}) )
-    $util.error("entity typename not specified", "EntityTypeNotFound")
+    $util.appendError("entity typename not specified", "EntityTypeNotFound")
 #end
 
 #if( $util.isNullOrBlank(${args["id"]}) )
-    $util.error("entity id not specified", "EntityIdNotFound")
+    $util.appendError("entity id not specified", "EntityIdNotFound")
+    #return
 #end
 
 #if( !$util.isNullOrBlank(${args["version"]}) && !$util.isNumber(${args["version"]}) )
-    $util.error("entity version not numeric", "EntityVersionNotNumeric")
+    $util.appendError("entity version not numeric", "EntityVersionNotNumeric")
+    #return
 #end
 
 #set( $typename = ${args["__typename"]} )
@@ -165,7 +167,8 @@ const ssupdatefnrequest = `
 `
 const ssupdatefnresponse = `
 #if($ctx.error)
-    $util.error($ctx.error.message, $ctx.error.type)
+    $util.appendError($ctx.error.message, $ctx.error.type)
+    #return
 #end
 $util.toJson($ctx.result)
 `

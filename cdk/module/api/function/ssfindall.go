@@ -23,7 +23,8 @@ const ssfindallfnrequest = `
 #set( $args = $ctx.stash.input )
 
 #if( $util.isNullOrBlank(${args["__typename"]}) )
-    $util.error("entity typename not specified", "EntityTypeNotFound")
+    $util.appendError("entity typename not specified", "EntityTypeNotFound")
+    #return
 #end
 
 #set( $typename = ${args["__typename"]} )
@@ -49,7 +50,8 @@ const ssfindallfnrequest = `
 `
 const ssfindallfnresponse = `
 #if($ctx.error)
-    $util.error($ctx.error.message, $ctx.error.type)
+    $util.appendError($ctx.error.message, $ctx.error.type)
+    #return
 #end
 $util.toJson($ctx.result)
 `

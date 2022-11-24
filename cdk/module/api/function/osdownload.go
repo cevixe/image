@@ -23,7 +23,8 @@ const osdownloadfnrequest = `
 #set( $args = $ctx.stash.input )
 
 #if( $util.isNullOrBlank(${args["name"]}) )
-    $util.error("object name not specified", "ObjectNameNotFound")
+    $util.appendError("object name not specified", "ObjectNameNotFound")
+	#return
 #end
 #set( $name = ${args["name"]} )
 
@@ -39,7 +40,8 @@ const osdownloadfnrequest = `
 
 const osdownloadfnresponse = `
 #if($ctx.error)
-  $util.error($ctx.error.message, $ctx.error.type)
+  $util.appendError($ctx.error.message, $ctx.error.type)
+  #return
 #end
 $util.toJson($context.result)
 `

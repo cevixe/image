@@ -23,7 +23,8 @@ const osuploadfnrequest = `
 #set( $args = $ctx.stash.input )
 
 #if( $util.isNullOrBlank(${args["space"]}) )
-    $util.error("object space not specified", "ObjectSpaceNotFound")
+    $util.appendError("object space not specified", "ObjectSpaceNotFound")
+	#return
 #end
 #set( $space = ${args["space"]} )
 
@@ -59,7 +60,8 @@ const osuploadfnrequest = `
 
 const osuploadfnresponse = `
 #if($ctx.error)
-  $util.error($ctx.error.message, $ctx.error.type)
+  $util.appendError($ctx.error.message, $ctx.error.type)
+  #return
 #end
 $util.toJson($context.result)
 `
