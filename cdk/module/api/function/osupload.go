@@ -39,7 +39,6 @@ const osuploadfnrequest = `
 
 #set( $id = $util.autoUlid() )
 #set( $now = $util.time.nowEpochMilliSeconds() )
-#set( $author = $util.defaultIfNullOrBlank($ctx.identity.username,"unknown") )
 
 #set( $year = $util.time.epochMilliSecondsToFormatted($now, "yyyy", $timezone) )
 #set( $month = $util.time.epochMilliSecondsToFormatted($now, "MM", $timezone) )

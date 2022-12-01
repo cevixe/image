@@ -10,6 +10,7 @@ type ApiProps struct {
 	Zone        awsroute53.IHostedZone  `field:"required"`
 	StateStore  statestore.StateStore   `field:"required"`
 	ObjectStore objectstore.ObjectStore `field:"required"`
+	OIDCIssuer  string                  `field:"required"`
 }
 
 type DataSourceType string

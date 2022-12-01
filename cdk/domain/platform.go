@@ -52,6 +52,7 @@ func NewPlatform(scope constructs.Construct, props *PlatformProps) module.Module
 			Zone:        zone,
 			ObjectStore: objectstore,
 			StateStore:  statestore,
+			OIDCIssuer:  mod.Import("core", export.OpenIdConnectIssuer),
 		},
 	)
 	mod.Export(export.GraphQLApiId, *gqlapi.Resource().AttrApiId())

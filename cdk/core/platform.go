@@ -19,9 +19,12 @@ func NewPlatform(scope constructs.Construct, app string) module.Module {
 		&awscdk.CfnParameterProps{Type: jsii.String("String")})
 	hostedZoneName := awscdk.NewCfnParameter(mod.Resource(), jsii.String("HostedZoneName"),
 		&awscdk.CfnParameterProps{Type: jsii.String("String")})
+	openIdConnectIssuer := awscdk.NewCfnParameter(mod.Resource(), jsii.String("OpenIdConnectIssuer"),
+		&awscdk.CfnParameterProps{Type: jsii.String("String")})
 
 	mod.Export(export.HostedZoneId, *hostedZoneId.ValueAsString())
 	mod.Export(export.HostedZoneName, *hostedZoneName.ValueAsString())
+	mod.Export(export.OpenIdConnectIssuer, *openIdConnectIssuer.ValueAsString())
 
 	advancedbus := bus.NewBus(mod, "advancedbus",
 		&bus.BusProps{

@@ -13,7 +13,7 @@ func NewApi(mod module.Module, alias string, props *ApiProps) Api {
 
 	domainName := fmt.Sprintf("%s.%s", mod.Name(), *props.Zone.ZoneName())
 
-	api := appsync.NewApi(mod, alias)
+	api := appsync.NewApi(mod, alias, &appsync.ApiProps{OIDCIssuer: props.OIDCIssuer})
 	key := appsync.NewApiKey(mod, alias, &appsync.ApiKeyProps{Api: api})
 
 	role := appsync.NewApiRole(mod, alias)

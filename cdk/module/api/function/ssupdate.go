@@ -40,7 +40,7 @@ const ssupdatefnrequest = `
 
 #set( $typename = ${args["__typename"]} )
 
-#set( $updatedBy = $util.defaultIfNullOrBlank($ctx.identity.username,"unknown") )
+#set( $updatedBy = $util.defaultIfNullOrBlank($ctx.identity.sub,"unknown") )
 #set( $updatedAt = $util.time.nowISO8601() )
 
 #set( $tracingHeader = $context.request.headers["x-amzn-trace-id"] )

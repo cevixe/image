@@ -33,8 +33,9 @@ deploy(){
         defaultParams="--app 'dist/' --all --require-approval never"
         coreStackName="cvx-$CEVIXE_PROJECT_NAME-core-platform"
         hostedZoneIdParam="--parameters $coreStackName:HostedZoneId=$CEVIXE_ZONE_ID"
-        hostedZoneNameParam="--parameters $coreStackName:HostedZoneName=$CEVIXE_ZONE_NAME"
-        cdk deploy $defaultParams $hostedZoneIdParam $hostedZoneNameParam
+        hostedZoneNameParam="--parameters $coreStackName:HostedZoneName=$CEVIXE_ZONE_NAME"            
+        openIdConnectIssuerParam="--parameters $coreStackName:OpenIdConnectIssuer=$CEVIXE_OIDC_ISSUER"
+        cdk deploy $defaultParams $hostedZoneIdParam $hostedZoneNameParam $openIdConnectIssuerParam
         result=$?
     elif [ "$CEVIXE_PROJECT_KIND" == "domain" ]; then
         defaultParams="--app 'dist/' --require-approval never"
@@ -68,15 +69,23 @@ validate() {
 }
 
 config() {
+
+    if [ -z ${AWS_COGNITO_USER_POOL} ]; then 
+        echo "AWS cognito user pool not defined"
+        exit 1
+    fi
+
     export CDK_DEFAULT_ACCOUNT=$(aws sts get-caller-identity --query "Account" --output text)
     export CDK_DEFAULT_REGION=${AWS_DEFAULT_REGION:=us-east-1}
     export CEVIXE_ZONE_ID=${CEVIXE_ZONE_ID:=$(aws route53 list-hosted-zones | jq -r .HostedZones[0].Id | cut -d'/' -f 3)}
     export CEVIXE_ZONE_NAME=${CEVIXE_ZONE_NAME:=$(aws route53 list-hosted-zones | jq -r .HostedZones[0].Name | head -c-2)}
+    export CEVIXE_OIDC_ISSUER="https://cognito-idp.${AWS_DEFAULT_REGION}.amazonaws.com/${AWS_COGNITO_USER_POOL}"
 
     echo "CDK_DEFAULT_ACCOUNT=${CDK_DEFAULT_ACCOUNT}"    
     echo "CDK_DEFAULT_REGION=${CDK_DEFAULT_REGION}"
     echo "CEVIXE_ZONE_ID=${CEVIXE_ZONE_ID}"
     echo "CEVIXE_ZONE_NAME=${CEVIXE_ZONE_NAME}"
+    echo "CEVIXE_OIDC_ISSUER=${CEVIXE_OIDC_ISSUER}"
 }
 
 case "$1" in

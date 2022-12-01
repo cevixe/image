@@ -42,6 +42,9 @@ func (m *impl) Import(from string, name string) string {
 
 	varname := fmt.Sprintf("%s-%s", from, name)
 	externalValue := awscdk.Fn_ImportValue(jsii.String(varname))
+	if externalValue == nil {
+		return ""
+	}
 	return *externalValue
 }
 

@@ -7,17 +7,22 @@ import (
 	"github.com/cevixe/cdk/naming"
 )
 
-func NewApi(mod module.Module, alias string) awsappsync.CfnGraphQLApi {
+type ApiProps struct {
+	OIDCIssuer string `field:"required"`
+}
+
+func NewApi(mod module.Module, alias string, props *ApiProps) awsappsync.CfnGraphQLApi {
 
 	name := naming.NewName(mod, naming.ResType_GraphQLApi, alias)
 
-	return awsappsync.NewCfnGraphQLApi(
-		mod.Resource(),
-		name.Logical(),
-		&awsappsync.CfnGraphQLApiProps{
-			Name:               name.Logical(),
-			AuthenticationType: jsii.String("API_KEY"),
-			XrayEnabled:        jsii.Bool(true),
+	cfnprops := &awsappsync.CfnGraphQLApiProps{
+		Name:               name.Logical(),
+		AuthenticationType: jsii.String("API_KEY"),
+		XrayEnabled:        jsii.Bool(true),
+		OpenIdConnectConfig: &awsappsync.CfnGraphQLApi_OpenIDConnectConfigProperty{
+			Issuer: jsii.String(props.OIDCIssuer),
 		},
-	)
+	}
+
+	return awsappsync.NewCfnGraphQLApi(mod.Resource(), name.Logical(), cfnprops)
 }

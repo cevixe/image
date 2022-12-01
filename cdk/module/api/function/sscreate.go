@@ -32,7 +32,7 @@ const sscreatefnrequest = `
 
 #set( $typename = ${args["__typename"]} )
 #set( $id = $util.autoUlid() )
-#set( $createdBy = $util.defaultIfNullOrBlank($ctx.identity.username,"unknown") )
+#set( $createdBy = $util.defaultIfNullOrBlank($ctx.identity.sub,"unknown") )
 #set( $createdAt = $util.time.nowISO8601() )
 #set( $space = "alive#$typename" )
 
