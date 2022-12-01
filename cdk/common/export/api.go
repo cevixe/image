@@ -5,5 +5,4 @@ const (
 	GraphQLApiArn  = "gqlapiarn"
 	GraphQLApiRole = "gqlapirole"
 	GraphQLApiUrl  = "gqlapiurl"
-	GraphQLApiKey  = "gqlapikey"
 )

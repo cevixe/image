@@ -58,7 +58,6 @@ func NewPlatform(scope constructs.Construct, props *PlatformProps) module.Module
 	mod.Export(export.GraphQLApiId, *gqlapi.Resource().AttrApiId())
 	mod.Export(export.GraphQLApiArn, *gqlapi.Resource().AttrArn())
 	mod.Export(export.GraphQLApiUrl, gqlapi.URL())
-	mod.Export(export.GraphQLApiKey, *gqlapi.Key().AttrApiKey())
 
 	gqlapi.Role().AddToPrincipalPolicy(
 		iam.NewDynCrudPol(*statestore.Resource().TableArn()))

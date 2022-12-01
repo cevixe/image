@@ -11,7 +11,6 @@ type Api interface {
 	Name() string
 	URL() string
 	Role() awsiam.Role
-	Key() awsappsync.CfnApiKey
 	Schema() awsappsync.CfnGraphQLSchema
 	Resource() awsappsync.CfnGraphQLApi
 }

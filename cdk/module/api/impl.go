@@ -13,7 +13,6 @@ type apiImpl struct {
 	name     string
 	record   string
 	domain   string
-	key      awsappsync.CfnApiKey
 	schema   awsappsync.CfnGraphQLSchema
 	role     awsiam.Role
 	resource awsappsync.CfnGraphQLApi
@@ -29,10 +28,6 @@ func (a *apiImpl) Name() string {
 
 func (a *apiImpl) Schema() awsappsync.CfnGraphQLSchema {
 	return a.schema
-}
-
-func (a *apiImpl) Key() awsappsync.CfnApiKey {
-	return a.key
 }
 
 func (a *apiImpl) Role() awsiam.Role {
