@@ -23,6 +23,20 @@ func NewBucket(mod module.Module, alias string, domain string) awss3.Bucket {
 			EventBridgeEnabled: jsii.Bool(false),
 			AutoDeleteObjects:  jsii.Bool(true),
 			RemovalPolicy:      awscdk.RemovalPolicy_DESTROY,
+			Cors: &[]*awss3.CorsRule{
+				{
+					AllowedMethods: &[]awss3.HttpMethods{
+						awss3.HttpMethods_GET,
+						awss3.HttpMethods_PUT,
+					},
+					AllowedOrigins: &[]*string{
+						jsii.String("*"),
+					},
+					AllowedHeaders: &[]*string{
+						jsii.String("*"),
+					},
+				},
+			},
 		},
 	)
 }
