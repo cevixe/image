@@ -17,12 +17,14 @@ func NewApi(mod module.Module, alias string, props *ApiProps) awsappsync.CfnGrap
 
 	cfnprops := &awsappsync.CfnGraphQLApiProps{
 		Name:               name.Logical(),
-		AuthenticationType: jsii.String("API_KEY"),
+		AuthenticationType: jsii.String("OPENID_CONNECT"),
 		XrayEnabled:        jsii.Bool(true),
 		OpenIdConnectConfig: &awsappsync.CfnGraphQLApi_OpenIDConnectConfigProperty{
 			Issuer: jsii.String(props.OIDCIssuer),
 		},
 	}
 
-	return awsappsync.NewCfnGraphQLApi(mod.Resource(), name.Logical(), cfnprops)
+	api := awsappsync.NewCfnGraphQLApi(mod.Resource(), name.Logical(), cfnprops)
+
+	return api
 }
