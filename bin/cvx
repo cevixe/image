@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -u
-
 display_help(){
     echo
     echo "Usage: cvx COMMAND" >&2
@@ -80,7 +78,7 @@ config() {
     echo "CEVIXE_ZONE_ID=${CEVIXE_ZONE_ID}"
     echo "CEVIXE_ZONE_NAME=${CEVIXE_ZONE_NAME}"
 
-    if [ "${CEVIXE_PROJECT_KIND}" == "app" && "${AWS_COGNITO_USER_POOL}" == "" ]; then 
+    if [ "$CEVIXE_PROJECT_KIND" == "app" ] && [ "$AWS_COGNITO_USER_POOL" == "" ]; then 
         echo "AWS cognito user pool not defined"
         exit 1
     else
