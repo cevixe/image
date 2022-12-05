@@ -32,6 +32,10 @@ const sscreatefnrequest = `
 
 #set( $typename = ${args["__typename"]} )
 #set( $id = $util.autoUlid() )
+#if( !$util.isNullOrBlank(${args["id"]}) )
+	#set( $id = ${args["id"]} )
+#end
+
 #set( $createdBy = $util.defaultIfNullOrBlank($ctx.identity.sub,"unknown") )
 #set( $createdAt = $util.time.nowISO8601() )
 #set( $space = "alive#$typename" )
@@ -58,7 +62,8 @@ $util.qr( $args.put("__space", $space) )
     "key" : {
         "id" : { "S" : "${id}" }
     },
-    "attributeValues": $util.toJson($attributes)
+    "attributeValues": $util.toJson($attributes),
+	"conditionExpression": "attribute_not_exists(id)"
 }
 `
 const sscreatefnresponse = `
