@@ -55,5 +55,12 @@ const ssfindallfnresponse = `
 #if($ctx.error)
     $util.error($ctx.error.message, $ctx.error.type)
 #end
-$util.toJson($ctx.result)
+
+#set($result = [])
+#foreach( $item in $ctx.result )
+    $!{item.put("updatedBy", { "__typename": "User", "id": "$item.updatedBy" })}
+    $!{item.put("createdBy", { "__typename": "User", "id": "$item.createdBy" })}
+    #set( $discard = ${result.add($item)} )
+#end
+$util.toJson($result)
 `

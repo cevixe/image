@@ -46,11 +46,15 @@ const ssfindonefnresponse = `
 #if($ctx.error)
     $util.error($ctx.error.message, $ctx.error.type)
 #end
-#if($ctx.result["__typename"] != $ctx.stash.input["__typename"])
+
+#set($result = $ctx.result)
+#if($result["__typename"] != $ctx.stash.input["__typename"])
 	#return
 #end
-#if($ctx.result["__status"] == "dead")
+#if($result["__status"] == "dead")
 	#return
 #end
-$util.toJson($ctx.result)
+$!{result.put("updatedBy", { "__typename": "User", "id": "$result.updatedBy" })}
+$!{result.put("createdBy", { "__typename": "User", "id": "$result.createdBy" })}
+$util.toJson($result)
 `
