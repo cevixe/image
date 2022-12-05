@@ -68,11 +68,15 @@ const ssfindbyfnresponse = `
     $util.error($ctx.error.message, $ctx.error.type)
 #end
 
-#set($result = [])
-#foreach( $item in $ctx.result )
-    $!{item.put("updatedBy", { "__typename": "User", "id": "$item.updatedBy" })}
-    $!{item.put("createdBy", { "__typename": "User", "id": "$item.createdBy" })}
-    #set( $discard = ${result.add($item)} )
+#set($items = [])
+#foreach( $item in $ctx.result.items )
+    $util.qr($item.put("updatedBy", { "__typename": "User", "id": "$item.updatedBy" }))
+    $util.qr($item.put("createdBy", { "__typename": "User", "id": "$item.createdBy" }))
+    #set( $discard = ${items.add($item)} )
 #end
+#set($result = {
+	"items": $items,
+    "nextToken": $ctx.result.nextToken
+})
 $util.toJson($result)
 `

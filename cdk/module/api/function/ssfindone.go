@@ -54,7 +54,7 @@ const ssfindonefnresponse = `
 #if($result["__status"] == "dead")
 	#return
 #end
-$!{result.put("updatedBy", { "__typename": "User", "id": "$result.updatedBy" })}
-$!{result.put("createdBy", { "__typename": "User", "id": "$result.createdBy" })}
+$util.qr($result.put("updatedBy", { "__typename": "User", "id": "$result.updatedBy" }))
+$util.qr($result.put("createdBy", { "__typename": "User", "id": "$result.createdBy" }))
 $util.toJson($result)
 `
