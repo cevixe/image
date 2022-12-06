@@ -93,9 +93,10 @@ const ssdeletefnrequest = `
 
     ## Iterate through indexes
     #foreach( $idx in $util.map.copyAndRemoveAll($args.indexes, $reservedIdx) )
+        #set( $entryName = $util.autoUlid() )
         #set( $pk = "__${idx}-pk" )
-        #set( $discard = ${expRemove.add("#${pk}")} )
-        $!{expNames.put("#att${pk}", "${pk}")}
+        #set( $discard = ${expRemove.add("#${entryName}")} )
+        $!{expNames.put("#${entryName}", "${pk}")}
     #end
 
     ## Continue building the update expression, adding attributes we're going to ADD **

@@ -69,17 +69,18 @@ const ssupdatefnrequest = `
 
     ## Iterate through each argument, skipping "id" and "expectedVersion" **
     #foreach( $entry in $util.map.copyAndRemoveAllKeys($args, $reservedProps).entrySet() )
+        #set( $entryName = $util.autoUlid() )
         #if( $util.isNull($entry.value) )
             ## If the argument is set to "null", then remove that attribute from the item in DynamoDB **
 
-            #set( $discard = ${expRemove.add("#att${entry.key}")} )
-            $!{expNames.put("#att${entry.key}", "${entry.key}")}
+            #set( $discard = ${expRemove.add("#${entryName}")} )
+            $!{expNames.put("#${entryName}", "${entry.key}")}
         #else
             ## Otherwise set (or update) the attribute on the item in DynamoDB **
 
-            $!{expSet.put("#att${entry.key}", ":att${entry.key}")}
-            $!{expNames.put("#att${entry.key}", "${entry.key}")}
-            $!{expValues.put(":att${entry.key}", $util.dynamodb.toDynamoDB($entry.value))}
+            $!{expSet.put("#${entryName}", ":${entryName}")}
+            $!{expNames.put("#${entryName}", "${entry.key}")}
+            $!{expValues.put(":${entryName}", $util.dynamodb.toDynamoDB($entry.value))}
         #end
     #end
 
