@@ -136,9 +136,9 @@ const ssdeletefnrequest = `
     },
     #if( $util.isNullOrBlank(${args.version}) )
     "condition" : {
-        "expression" : "#status = :expectedStatus",
+        "expression" : "#expectedStatus = :expectedStatus",
         "expressionNames" : {
-            "#status" : "__status"
+            "#expectedStatus" : "__status"
         },
         "expressionValues" : {
             ":expectedStatus" : $util.dynamodb.toDynamoDBJson("alive")
@@ -146,10 +146,10 @@ const ssdeletefnrequest = `
     }
     #else
     "condition" : {
-        "expression" : "#status = :expectedStatus AND #version = :expectedVersion",
+        "expression" : "#expectedStatus = :expectedStatus AND #expectedVersion = :expectedVersion",
         "expressionNames" : {
-            "#status" : "__status",
-            "#version": "version"
+            "#expectedStatus" : "__status",
+            "#expectedVersion": "version"
         },
         "expressionValues" : {
             ":expectedStatus" : $util.dynamodb.toDynamoDBJson("alive"),
