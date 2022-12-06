@@ -72,14 +72,14 @@ const ssupdatefnrequest = `
         #if( $util.isNull($entry.value) )
             ## If the argument is set to "null", then remove that attribute from the item in DynamoDB **
 
-            #set( $discard = ${expRemove.add("#${entry.key}")} )
-            $!{expNames.put("#${entry.key}", "${entry.key}")}
+            #set( $discard = ${expRemove.add("#att${entry.key}")} )
+            $!{expNames.put("#att${entry.key}", "${entry.key}")}
         #else
             ## Otherwise set (or update) the attribute on the item in DynamoDB **
 
-            $!{expSet.put("#${entry.key}", ":${entry.key}")}
-            $!{expNames.put("#${entry.key}", "${entry.key}")}
-            $!{expValues.put(":${entry.key}", $util.dynamodb.toDynamoDB($entry.value))}
+            $!{expSet.put("#att${entry.key}", ":att${entry.key}")}
+            $!{expNames.put("#att${entry.key}", "${entry.key}")}
+            $!{expValues.put(":att${entry.key}", $util.dynamodb.toDynamoDB($entry.value))}
         #end
     #end
 
@@ -93,9 +93,9 @@ const ssupdatefnrequest = `
     $!{expNames.put("#updatedBy", "updatedBy")}
     $!{expValues.put(":updatedBy", $util.dynamodb.toDynamoDB($updatedBy))}
 
-    $!{expSet.put("#__transaction", ":__transaction")}
-    $!{expNames.put("#__transaction", "__transaction")}
-    $!{expValues.put(":__transaction", $util.dynamodb.toDynamoDB($transaction))}
+    $!{expSet.put("#transaction", ":transaction")}
+    $!{expNames.put("#transaction", "__transaction")}
+    $!{expValues.put(":transaction", $util.dynamodb.toDynamoDB($transaction))}
 
     ## Start building the update expression, starting with attributes we're going to SET **
     #set( $expression = "" )

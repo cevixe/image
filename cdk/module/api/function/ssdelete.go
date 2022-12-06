@@ -76,17 +76,17 @@ const ssdeletefnrequest = `
     $!{expNames.put("#updatedBy", "updatedBy")}
     $!{expValues.put(":updatedBy", $util.dynamodb.toDynamoDB($updatedBy))}
 
-    $!{expSet.put("#__transaction", ":__transaction")}
-    $!{expNames.put("#__transaction", "__transaction")}
-    $!{expValues.put(":__transaction", $util.dynamodb.toDynamoDB($transaction))}
+    $!{expSet.put("#transaction", ":transaction")}
+    $!{expNames.put("#transaction", "__transaction")}
+    $!{expValues.put(":transaction", $util.dynamodb.toDynamoDB($transaction))}
 
-    $!{expSet.put("#__status", ":__status")}
-    $!{expNames.put("#__status", "__status")}
-    $!{expValues.put(":__status", $util.dynamodb.toDynamoDB("dead"))}
+    $!{expSet.put("#status", ":status")}
+    $!{expNames.put("#status", "__status")}
+    $!{expValues.put(":status", $util.dynamodb.toDynamoDB("dead"))}
 
-    $!{expSet.put("#__space", ":__space")}
-    $!{expNames.put("#__space", "__space")}
-    $!{expValues.put(":__space", $util.dynamodb.toDynamoDB($space))}
+    $!{expSet.put("#space", ":space")}
+    $!{expNames.put("#space", "__space")}
+    $!{expValues.put(":space", $util.dynamodb.toDynamoDB($space))}
 
     ## Cevixe reserved properties
     #set( $reservedIdx = ["by-space"] )
@@ -94,11 +94,8 @@ const ssdeletefnrequest = `
     ## Iterate through indexes
     #foreach( $idx in $util.map.copyAndRemoveAll($args.indexes, $reservedIdx) )
         #set( $pk = "__${idx}-pk" )
-        #set( $sk = "__${idx}-sk" )
         #set( $discard = ${expRemove.add("#${pk}")} )
-        #set( $discard = ${expRemove.add("#${sk}")} )
-        $!{expNames.put("#${pk}", "${pk}")}
-        $!{expNames.put("#${sk}", "${sk}")}
+        $!{expNames.put("#att${pk}", "${pk}")}
     #end
 
     ## Continue building the update expression, adding attributes we're going to ADD **
