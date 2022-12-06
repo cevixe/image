@@ -63,7 +63,9 @@ $util.qr( $args.put("__space", $space) )
         "id" : { "S" : "${id}" }
     },
     "attributeValues": $util.toJson($attributes),
-	"conditionExpression": "attribute_not_exists(id)"
+	"condition" : {
+        "expression" : "attribute_not_exists(id)"
+    }
 }
 `
 const sscreatefnresponse = `
