@@ -38,7 +38,7 @@ const ssfindonefnrequest = `
     "version": "2018-05-29",
     "operation": "GetItem",
     "key": {
-        "id": $util.dynamodb.toDynamoDBJson($ctx.args.id),
+        "id": $util.dynamodb.toDynamoDBJson($args.id),
     }
 }
 `
