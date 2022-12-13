@@ -99,6 +99,18 @@ const ssdeletefnrequest = `
         $!{expNames.put("#${entryName}", "${pk}")}
     #end
 
+    ## Start building the update expression, starting with attributes we're going to SET **
+    #set( $expression = "" )
+    #if( !${expSet.isEmpty()} )
+        #set( $expression = "SET" )
+        #foreach( $entry in $expSet.entrySet() )
+            #set( $expression = "${expression} ${entry.key} = ${entry.value}" )
+            #if ( $foreach.hasNext )
+                #set( $expression = "${expression}," )
+            #end
+        #end
+    #end
+    
     ## Continue building the update expression, adding attributes we're going to ADD **
     #if( !${expAdd.isEmpty()} )
         #set( $expression = "${expression} ADD" )
