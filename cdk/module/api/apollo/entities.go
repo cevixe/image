@@ -59,7 +59,7 @@ func NewEntitiesResolver(mod module.Module, props *EntitiesResolverProps) awsapp
 		Type:             "Query",
 		Field:            "_entities",
 		RequestTemplate:  `{}`,
-		ResponseTemplate: `$ctx.result`,
+		ResponseTemplate: `$util.toJson($ctx.result)`,
 		Functions:        []string{*fn.AttrFunctionId()},
 	})
 	rs.AddDependsOn(fn)
