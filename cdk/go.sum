@@ -10,8 +10,6 @@ github.com/aws/constructs-go/constructs/v10 v10.1.137/go.mod h1:L6ZTlHmRRQiWl8EA
 github.com/aws/jsii-runtime-go v1.69.0/go.mod h1:91SPsitQ+dDlxHNkXqVt1C6QmPmHC32QJm4xg6F5Q+4=
 github.com/aws/jsii-runtime-go v1.71.0 h1:WkTwbKy0Id2UHDUYOB2VDDeXuvShAIW4dUpzBcy7+t8=
 github.com/aws/jsii-runtime-go v1.71.0/go.mod h1:Rwfj+tA+2/1/QfJTq1uXHm4UYaeTRc+zP7lZuEfg8cE=
-github.com/cevixe/sdk v0.0.0-20221114145706-ac4714cb4346 h1:qidgvCoIXcRarJu37p2I4uKf/H7dAWJGsXegXhXiRNE=
-github.com/cevixe/sdk v0.0.0-20221114145706-ac4714cb4346/go.mod h1:+voyBOzb8Jl1ocRg51MHinKKtQTkQlyyTYmvPm+nCJQ=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=

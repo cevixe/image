@@ -7,7 +7,7 @@ require (
 	github.com/aws/aws-cdk-go/awscdklambdagoalpha/v2 v2.47.0-alpha.0
 	github.com/aws/constructs-go/constructs/v10 v10.1.137
 	github.com/aws/jsii-runtime-go v1.71.0
-	github.com/cevixe/app v0.3.0
+	github.com/cevixe/app v0.0.0
 	golang.org/x/text v0.4.0
 	gopkg.in/yaml.v3 v3.0.1
 )
