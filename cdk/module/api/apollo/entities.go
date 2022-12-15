@@ -49,7 +49,7 @@ func NewEntitiesResolver(mod module.Module, props *EntitiesResolverProps) awsapp
 
 	fn := appsync.NewFunction(mod, "apolloentitiesfn", &appsync.FunctionProps{
 		ApiId:            props.ApiId,
-		DataSourceName:   "mock",
+		DataSourceName:   "statestore",
 		RequestTemplate:  request,
 		ResponseTemplate: response,
 	})
