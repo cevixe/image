@@ -18,7 +18,6 @@ const EntitiesRequest = `
 #set($ids = [])
 #foreach($item in ${ctx.args.representations})
 	#set($map = {})
-	$util.qr($map.put("__typename", $util.dynamodb.toString($item.__typename)))
 	$util.qr($map.put("id", $util.dynamodb.toString($item.id)))
 	$util.qr($ids.add($map))
 #end
@@ -39,13 +38,14 @@ const EntitiesResponse = `
 #if($ctx.error)
 	$util.error($ctx.error.message, $ctx.error.type)
 #end
-$util.toJson($context.result)
+#set($items = $context.result.data.%s)
+$util.toJson($items)
 `
 
 func NewEntitiesResolver(mod module.Module, props *EntitiesResolverProps) awsappsync.CfnResolver {
 
 	request := fmt.Sprintf(EntitiesRequest, props.StateStoreName)
-	response := EntitiesResponse
+	response := fmt.Sprintf(EntitiesResponse, props.StateStoreName)
 
 	fn := appsync.NewFunction(mod, "apolloentitiesfn", &appsync.FunctionProps{
 		ApiId:            props.ApiId,
