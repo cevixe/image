@@ -15,12 +15,17 @@ type EntitiesResolverProps struct {
 }
 
 const EntitiesRequest = `
+#set($set = {})
 #set($ids = [])
 #foreach($item in ${ctx.args.representations})
-	#set($map = {})
-	$util.qr($map.put("id", $util.dynamodb.toString($item.id)))
-	$util.qr($ids.add($map))
+	#if( !$set.containsKey($item.id) )
+      $util.qr($set.put($item.id, $item.id))
+      #set($map = {})
+      $util.qr($map.put("id", $util.dynamodb.toString($item.id)))
+      $util.qr($ids.add($map))
+    #end
 #end
+
 
 {
 	"version" : "2018-05-29",
@@ -28,7 +33,7 @@ const EntitiesRequest = `
 	"tables" : {
     	"%s": {
     		"keys": $util.toJson($ids),
-			"consistentRead": true
+			"consistentRead": false
 		}
     }
 }
@@ -39,7 +44,18 @@ const EntitiesResponse = `
 	$util.error($ctx.error.message, $ctx.error.type)
 #end
 #set($items = $context.result.data.%s)
-$util.toJson($items)
+
+#set($map = {})
+#foreach($item in $items)
+	$util.qr($map.put($item.id, $item))
+#end
+
+#set($result = [])
+#foreach($item in ${ctx.args.representations})
+	$util.qr($result.add($map.get($item.id)))
+#end
+
+$util.toJson($result)
 `
 
 func NewEntitiesResolver(mod module.Module, props *EntitiesResolverProps) awsappsync.CfnResolver {
