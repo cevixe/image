@@ -46,6 +46,12 @@ const osuploadfnrequest = `
 
 #set( $directory = "$space/$year/$month/$day" )
 #set( $filename = "$directory/$util.autoUlid()" )
+
+#if(!$util.isNullOrBlank(${args["name"]}))
+	#set( $name = ${args["name"]} )
+	#set( $filename = "$filename/$name" )
+#end
+
 #if( !$util.isNullOrBlank(${args["extension"]}) )
 	#set( $extension = ${args["extension"]} )
 	#set( $filename = "$filename.$extension" )
