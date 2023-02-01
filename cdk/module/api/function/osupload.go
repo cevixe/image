@@ -71,5 +71,8 @@ const osuploadfnresponse = `
 #if($ctx.error)
   $util.error($ctx.error.message, $ctx.error.type)
 #end
-$util.toJson($context.result)
+#set($result = $ctx.result)
+$util.qr($result.put("updatedBy", { "__typename": "User", "id": "$result.updatedBy" }))
+$util.qr($result.put("createdBy", { "__typename": "User", "id": "$result.createdBy" }))
+$util.toJson($result)
 `
