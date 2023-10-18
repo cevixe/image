@@ -28,6 +28,14 @@ func Load20221023(scope constructs.Construct, name string, props *spec.Propertie
 		})
 	}
 
+	datasources := make([]api.ApiProps_DataSource, 0)
+	for _, item := range props.Api.DataSources {
+		datasources = append(datasources, api.ApiProps_DataSource{
+			Name: item.Name,
+			Type: api.DataSourceType(item.Type),
+		})
+	}
+
 	handlers := make([]handler.HandlerProps, 0)
 	for idx := range props.Handlers {
 		item := props.Handlers[idx]
@@ -54,8 +62,9 @@ func Load20221023(scope constructs.Construct, name string, props *spec.Propertie
 		App:  props.App.Name,
 		Name: name,
 		Api: api.ApiConfigProps{
-			Resolvers: resolvers,
-			Functions: functions,
+			Resolvers:   resolvers,
+			Functions:   functions,
+			DataSources: datasources,
 		},
 		Handlers: handlers,
 	})

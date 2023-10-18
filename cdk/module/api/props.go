@@ -16,9 +16,9 @@ type ApiProps struct {
 type DataSourceType string
 
 const (
-	DataSourceType_Function = "function"
-	DataSourceType_Store    = "store"
-	DataSourceType_Mock     = "mock"
+	DataSourceType_Lambda = "lambda"
+	DataSourceType_Table  = "table"
+	DataSourceType_Mock   = "mock"
 )
 
 type ApiProps_DataSource struct {
