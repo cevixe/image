@@ -55,6 +55,7 @@ func NewPlatform(scope constructs.Construct, props *PlatformProps) module.Module
 			OIDCIssuer:  mod.Import("core", export.OpenIdConnectIssuer),
 		},
 	)
+	mod.Export(export.GraphQLApiId, *gqlapi.Role().RoleArn())
 	mod.Export(export.GraphQLApiId, *gqlapi.Resource().AttrApiId())
 	mod.Export(export.GraphQLApiArn, *gqlapi.Resource().AttrArn())
 	mod.Export(export.GraphQLApiUrl, gqlapi.URL())

@@ -74,19 +74,27 @@ func ConfigApi(mod module.Module, props *ApiConfigProps) {
 		"osdownloadfn": mod.Import(mod.Name(), export.ObjectStoreDownloadFn),
 	}
 
-	datasourceMap := map[string]datasource.DataSource {}
+	datasourceMap := map[string]datasource.DataSource{}
 
 	for _, item := range props.DataSources {
-		if item.Type != DataSourceType_Lambda { continue }
+
+		if item.Type != DataSourceType_Lambda {
+			continue
+		}
 		entryFormat := "/cmd/datasource/%s"
 		entry := fmt.Sprintf(entryFormat, item.Name)
 		fn := lambda.NewFunction(mod, item.Name, entry)
 		configLambdaDS(mod, fn)
 
+		role := appsync.NewApiDsLambdaRole(mod, &appsync.ApiDsRoleProps{
+			Alias: item.Name,
+			Arn:   *fn.Resource().FunctionArn(),
+		})
+
 		ds := datasource.NewDataSource(mod, item.Name, &datasource.DataSourceProps{
 			ApiId:       apiId,
 			Type:        datasource.DSType_Lambda,
-			RoleArn:     mod.Import(mod.Name(), export.GraphQLApiRole),
+			RoleArn:     *role.RoleArn(),
 			FunctionArn: *fn.Resource().FunctionArn(),
 		})
 		datasourceMap[item.Name] = ds
@@ -100,7 +108,7 @@ func ConfigApi(mod module.Module, props *ApiConfigProps) {
 		if datasourceMap[item.DataSource] != nil {
 			fn.Resource().AddDependsOn(datasourceMap[item.DataSource].Resource())
 		}
-		
+
 		functionsMap[item.Name] = *fn.Resource().AttrFunctionId()
 	}
 
