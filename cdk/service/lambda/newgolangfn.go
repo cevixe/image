@@ -27,7 +27,7 @@ func NewGolangFunction(mod module.Module, alias string, entry string) awslambda.
 		MemorySize:   jsii.Number(256),
 		Timeout:      awscdk.Duration_Seconds(jsii.Number(10)),
 		Entry:        jsii.String(entryPath),
-		Runtime:      awslambda.Runtime_GO_1_X(),
+		Runtime:      awslambda.Runtime_PROVIDED_AL2(),
 		LogRetention: awslogs.RetentionDays_ONE_MONTH,
 		Role:         role,
 		Bundling: &awsgo.BundlingOptions{
