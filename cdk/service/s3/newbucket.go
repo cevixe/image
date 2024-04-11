@@ -1,7 +1,7 @@
 package s3
 
 import (
-	"github.com/aws/aws-cdk-go/awscdk/v2"
+	//"github.com/aws/aws-cdk-go/awscdk/v2"
 	"github.com/aws/aws-cdk-go/awscdk/v2/awss3"
 	"github.com/aws/jsii-runtime-go"
 	"github.com/cevixe/cdk/module"
