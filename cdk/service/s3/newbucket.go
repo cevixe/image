@@ -21,8 +21,8 @@ func NewBucket(mod module.Module, alias string, domain string) awss3.Bucket {
 			Versioned:          jsii.Bool(false),
 			PublicReadAccess:   jsii.Bool(false),
 			EventBridgeEnabled: jsii.Bool(false),
-			AutoDeleteObjects:  jsii.Bool(true),
-			RemovalPolicy:      awscdk.RemovalPolicy_DESTROY,
+			//AutoDeleteObjects:  jsii.Bool(true),
+			//RemovalPolicy:      awscdk.RemovalPolicy_DESTROY,
 			Cors: &[]*awss3.CorsRule{
 				{
 					AllowedMethods: &[]awss3.HttpMethods{
